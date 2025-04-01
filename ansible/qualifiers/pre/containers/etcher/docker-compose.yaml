@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=server.py
+      - LOG_LEVEL=DEBUG
+      - INFLUX_URL=http://host.docker.internal:8086
+      - INFLUXDB_TOKEN=zU8-j9ySK9NoFf73LAyopV56CIbGRXJ1hDzbOCDH6GjJs3NnFfUOBLVJBKG2ohW8HoseQggxKZg9gfOkSfkfQ==
+      - INFLUX_ORG=PlaceboPharma
+      - INFLUX_BUCKET=PlaceboPharmaData
+    restart: unless-stopped

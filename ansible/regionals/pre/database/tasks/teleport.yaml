@@ -1,0 +1,25 @@
+---
+- name: Download teleport repository
+  ansible.builtin.get_url:
+    url: https://yum.releases.teleport.dev/centos/9/Teleport/x86_64/stable/v15/teleport-yum.repo
+    dest: /etc/yum.repos.d/teleport.repo
+    owner: root
+    group: root
+    mode: '0644'
+  tags:
+    - teleport
+
+- name: Install Teleport
+  ansible.builtin.dnf:
+    name: teleport
+    state: present
+  tags:
+    - teleport
+
+- name: Stop and disable Teleport
+  ansible.builtin.service:
+    name: teleport
+    state: stopped
+    enabled: false
+  tags:
+    - teleport

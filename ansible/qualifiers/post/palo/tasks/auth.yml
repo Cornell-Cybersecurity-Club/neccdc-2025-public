@@ -1,0 +1,7 @@
+---
+- name: Configuire Users for Palo Alto
+  paloaltonetworks.panos.panos_config_element:
+    provider: '{{ device }}'
+    xpath: "/config/mgt-config"
+    element: '{{ auth_users }}'
+  tags: auth_users

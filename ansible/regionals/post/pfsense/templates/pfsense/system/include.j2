@@ -1,0 +1,6 @@
+<system>
+{% filter indent(width=4, first=true) %}
+{% include "pfsense/system/_settings.xml.j2" +%}
+{% include "pfsense/system/_users.xml.j2" %}
+{% endfilter +%}
+</system>

@@ -1,0 +1,81 @@
+---
+- name: Ensure teleport.placebo-pharma.com points to localhost
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    state: present
+    regexp: '^127\.0\.0\.1\s+teleport\.placebo-pharma\.com$'
+    line: '127.0.0.1 teleport.placebo-pharma.com'
+  tags:
+    - teleport
+
+# Using Teleport 15 because it allows disabling the second factor
+# https://github.com/gravitational/teleport/discussions/7768
+- name: Download teleport repository
+  ansible.builtin.get_url:
+    # Yanked from the install script
+    url: https://yum.releases.teleport.dev/rhel/9/Teleport/aarch64/stable/v15/teleport-yum.repo
+    dest: /etc/yum.repos.d/teleport.repo
+    owner: root
+    group: root
+    mode: '0644'
+  tags:
+    - teleport
+
+- name: Install Teleport
+  ansible.builtin.dnf:
+    name: teleport
+    state: present
+  tags:
+    - teleport
+
+- name: Copy teleport configuration template
+  ansible.builtin.template:
+    src: templates/teleport.yaml.j2
+    dest: /etc/teleport.yaml
+    mode: '0664'
+    owner: root
+    group: rocky
+  tags:
+    - teleport
+
+- name: Copy temporary certificates
+  block:
+    - name: Copy full chain certificates
+      ansible.builtin.copy:
+        src: '../../../../documentation/black_team/certificates/teleport/fullchain.crt'
+        dest: /var/lib/teleport/fullchain.crt
+        mode: '0400'
+        owner: root
+        group: root
+      tags:
+        - teleport
+
+    - name: Copy private key
+      ansible.builtin.copy:
+        src: '../../../../documentation/black_team/certificates/teleport/private.key'
+        dest: /var/lib/teleport/private.key
+        mode: '0400'
+        owner: root
+        group: root
+      tags:
+        - teleport
+
+- name: Start and enable teleport
+  ansible.builtin.service:
+    name: teleport
+    state: restarted
+    enabled: true
+  tags:
+    - teleport
+
+- name: Wait teleport website is ready
+  ansible.builtin.uri:
+    url: 'https://{{ teleport_server_dns_address }}/webapi/ping'
+    return_content: false
+    status_code: 200
+  until: uri_output.status == 200
+  retries: 24
+  delay: 3
+  register: uri_output
+  tags:
+    - teleport

@@ -1,0 +1,75 @@
+<unbound>
+	<enable></enable>
+	<active_interface>all</active_interface>
+	<outgoing_interface>all</outgoing_interface>
+	<custom_options>{{ unbound_custom_options | b64encode }}</custom_options>
+	<dnssecstripped></dnssecstripped>
+	<port></port>
+	<tlsport></tlsport>
+	<sslcertref>67a3e76f0831e</sslcertref>
+	<system_domain_local_zone_type>transparent</system_domain_local_zone_type>
+	<msgcachesize>4</msgcachesize>
+	<outgoing_num_tcp>10</outgoing_num_tcp>
+	<incoming_num_tcp>10</incoming_num_tcp>
+	<edns_buffer_size>auto</edns_buffer_size>
+	<num_queries_per_thread>512</num_queries_per_thread>
+	<jostle_timeout>200</jostle_timeout>
+	<cache_max_ttl>86400</cache_max_ttl>
+	<cache_min_ttl>0</cache_min_ttl>
+	<infra_host_ttl>900</infra_host_ttl>
+	<infra_cache_numhosts>10000</infra_cache_numhosts>
+	<unwanted_reply_threshold>disabled</unwanted_reply_threshold>
+	<log_verbosity>1</log_verbosity>
+	<domainoverrides>
+		<domain>{{ ad.domain }}</domain>
+		<ip>{{ team_address.windows_dc }}</ip>
+		<tls_hostname></tls_hostname>
+		<descr><![CDATA[Primary Domain Controller]]></descr>
+	</domainoverrides>
+	<hosts>
+		<host>{{ hostvars[groups['windows_dc'][0]].hostname }}</host>
+		<domain>{{ ad.domain }}</domain>
+		<ip>{{ team_address.windows_dc }}</ip>
+		<descr></descr>
+		<aliases></aliases>
+	</hosts>
+	<hosts>
+		<host>{{ hostvars[groups['windows_ca'][0]].hostname }}</host>
+		<domain>{{ ad.domain }}</domain>
+		<ip>{{ team_address.windows_ca }}</ip>
+		<descr></descr>
+		<aliases></aliases>
+	</hosts>
+	<hosts>
+		<host>{{ hostvars[groups['windows_workstation'][0]].hostname }}</host>
+		<domain>{{ ad.domain }}</domain>
+		<ip>{{ team_address.windows_workstation }}</ip>
+		<descr></descr>
+		<aliases></aliases>
+	</hosts>
+	<hosts>
+		<host>{{ hostvars[groups['windows_dc_2'][0]].hostname }}</host>
+		<domain>{{ ad.domain }}</domain>
+		<ip>{{ team_address.windows_dc_2 }}</ip>
+		<descr></descr>
+		<aliases></aliases>
+	</hosts>
+	<hosts>
+		<host>{{ hostvars[groups['windows_workstation_2'][0]].hostname }}</host>
+		<domain>{{ ad.domain }}</domain>
+		<ip>{{ team_address.windows_workstation_2 }}</ip>
+		<descr></descr>
+		<aliases></aliases>
+	</hosts>
+	<acls>
+		<aclid>0</aclid>
+		<aclname><![CDATA[default]]></aclname>
+		<aclaction>allow</aclaction>
+		<description></description>
+		<row>
+			<acl_network>0.0.0.0</acl_network>
+			<mask>0</mask>
+			<description></description>
+		</row>
+	</acls>
+</unbound>

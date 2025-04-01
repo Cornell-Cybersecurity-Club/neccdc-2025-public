@@ -1,0 +1,20 @@
+kind: role
+version: v7
+metadata:
+  name: influxdb-admin
+  description: Admin access to InfluxDB
+spec:
+  options:
+    max_session_ttl: 72h
+    forward_agent: true
+    client_idle_timeout: 5m
+  allow:
+    app_labels:
+      app: influxdb
+    logins:
+      - admin
+      - '{{internal.logins}}'
+    host_groups:
+      - admin
+    node_labels:
+      service: influxdb

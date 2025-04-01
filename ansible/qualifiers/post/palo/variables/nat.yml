@@ -1,0 +1,82 @@
+---
+common_nat: &common_nat
+  from_zones:
+    - '{{ zones.public.name }}'
+  to_zones:
+    - '{{ zones.public.name }}'
+  to_interface: any
+  source_addresses: ['any']
+  destination_addresses: ['{{ address_objects.ip_public.value }}']
+
+nat_rules:
+  # DNAT Public to Nginx HTTP
+  - name: nat-5cca4905-2118
+    <<: *common_nat
+    service: service-http
+    destination_translated_address: '{{ address_objects.nginx.name }}'
+    destination_translated_port: 80
+    tags:
+      - '{{ tag_objects.testing.name }}'
+  # DNAT Public to Nginx HTTPS
+  - name: nat-61e2a1cf-f708
+    <<: *common_nat
+    service: service-https
+    destination_translated_address: '{{ address_objects.nginx.name }}'
+    destination_translated_port: 443
+    tags:
+      - '{{ tag_objects.production.name }}'
+  # DNAT Public to Graylog
+  - name: nat-0b876739-22fc
+    <<: *common_nat
+    service: '{{ service_objects.tcp_graylog.name }}'
+    destination_translated_address: '{{ team_address.graylog }}'
+    #destination_translated_port: '{{ service_objects.tcp_graylog.port }}'
+    tags:
+      - '{{ tag_objects.testing.name }}'
+  # DNAT Windows CA LDAP
+  - name: nat-a22a65ad-14dd
+    <<: *common_nat
+    service: '{{ service_groups.ldap.name }}'
+    destination_translated_address: '{{ team_address.windows_ca }}'
+    #destination_translated_port: '{{ service_objects.tcp_smb.port }}'
+    tags:
+      - '{{ tag_objects.production.name }}'
+  # DNAT Windows CA Kerberos
+  - name: nat-c9c739ea-27b3
+    <<: *common_nat
+    service: '{{ service_groups.kerberos.name }}'
+    destination_translated_address: '{{ team_address.windows_ca }}'
+    #destination_translated_port: '{{ service_objects.tcp_smb.port }}'
+    tags:
+      - '{{ tag_objects.production.name }}'
+  # DNAT Windows CA SMB
+  - name: nat-a2bf7ba0-5866
+    <<: *common_nat
+    service: '{{ service_objects.tcp_smb.name }}'
+    destination_translated_address: '{{ team_address.windows_ca }}'
+    #destination_translated_port: '{{ service_objects.tcp_smb.port }}'
+    tags:
+      - '{{ tag_objects.testing.name }}'
+  # DNAT Windows CA DNS
+  - name: nat-5af5c358-7a06
+    <<: *common_nat
+    service: '{{ service_groups.dns.name }}'
+    destination_translated_address: '{{ team_address.windows_ca }}'
+    #destination_translated_port: '{{ service_objects.tcp_smb.port }}'
+    tags:
+      - '{{ tag_objects.production.name }}'
+  # SNAT
+  - name: snat-01d2378a-1e7a
+    from_zones:
+      - '{{ zones.private.name }}'
+      - '{{ zones.dmz.name }}'
+    to_zones:
+      - '{{ zones.public.name }}'
+    to_interface: any
+    source_addresses: ['any']
+    destination_addresses: ['any']
+    source_translation_type: dynamic-ip-and-port
+    source_translation_address_type: interface-address
+    source_translation_interface: '{{ interfaces.public.if_name }}'
+    tags:
+      - '{{ tag_objects.internal.name }}'

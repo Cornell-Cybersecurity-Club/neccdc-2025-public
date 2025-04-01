@@ -1,0 +1,7 @@
+<installedpackages>
+{% filter indent(width=4, first=true) %}
+{% include "pfsense/packages/_sudo.xml.j2" +%}
+{% include "pfsense/packages/_restapi.xml.j2" +%}
+{% include "pfsense/packages/_haproxy.xml.j2" %}
+{% endfilter +%}
+</installedpackages>

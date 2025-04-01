@@ -1,0 +1,35 @@
+---
+- name: Configure Windows CA
+  hosts: windows_ca
+  gather_facts: false
+  vars:
+    ansible_become: true
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}@{{ adserver_domain }}"
+    ansible_become_password: "{{ ansible_password }}"
+  vars_files:
+    - "../../team_common.yaml"
+
+
+  tasks:
+    - name: Ensure a server is a domain controller
+      microsoft.ad.domain_controller:
+        dns_domain_name: "{{ adserver_domain }}"
+        domain_admin_user: "{{ ansible_user }}@{{ adserver_domain }}"
+        domain_admin_password: "{{ ansible_password }}"
+        safe_mode_password: "{{ ansible_password }}"
+        install_dns: true
+        state: domain_controller
+        reboot: false
+      register: dc_promotion
+
+    - name: Reboot after promotion
+      ansible.windows.win_reboot:
+      when: dc_promotion.reboot_required
+
+    - name: Configure Windows CA
+      ansible.builtin.include_role:
+        name: ca
+      vars:
+        ca_backup_source: "../files/ca/placebo-pharma-CA-01-CA.p12"
+        ca_backup_password: "{{ adserver_password }}"

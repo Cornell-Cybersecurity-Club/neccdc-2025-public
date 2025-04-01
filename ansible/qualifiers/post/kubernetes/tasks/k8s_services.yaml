@@ -1,0 +1,115 @@
+---
+- name: Create namespaces
+  become: true
+  become_user: ubuntu
+  kubernetes.core.k8s:
+    name: "{{ item }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+  loop:
+    - infrastructure
+    - monitoring
+    - open-emr
+    - pipeline
+    - security
+  tags:
+    - falco
+    - openemr
+    - longhorn
+    - prometheus
+    - services
+    - traefik
+
+# Circular dependency between traefik and prometheus CRDs
+- name: Install ServiceMonitor CRD
+  block:
+    - name: Download ServiceMonitor manifest
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.78.1/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+        dest: /tmp/server-monitor.yaml
+        mode: '0664'
+      tags:
+        - services
+        - prometheus
+
+    - name: Apply ServiceMonitor manifest
+      become: true
+      become_user: ubuntu
+      kubernetes.core.k8s:
+        state: present
+        src: /tmp/server-monitor.yaml
+      tags:
+        - services
+        - prometheus
+
+    - name: Delete ServiceMonitor manifest file
+      ansible.builtin.file:
+        path: /tmp/server-monitor.yaml
+        state: absent
+      tags:
+        - services
+        - prometheus
+
+
+- name: Install Traefik
+  ansible.builtin.include_tasks:
+    file: "tasks/k8s/traefik.yaml"
+  tags:
+    - services
+    - traefik
+
+- name: Install longhorn
+  ansible.builtin.include_tasks:
+    file: "tasks/k8s/longhorn.yaml"
+  tags:
+    - services
+    - longhorn
+
+- name: Install prometheus
+  ansible.builtin.include_tasks:
+    file: "tasks/k8s/prometheus.yaml"
+  tags:
+    - services
+    - prometheus
+
+# https://grafana.com/grafana/dashboards/
+- name: Grafana dashboards
+  ansible.builtin.include_tasks:
+    file: "tasks/k8s/grafana.yaml"
+  vars:
+    dashboards:
+      - name: longhorn
+        id: 16888
+        revision: 9
+      - name: traefik
+        id: 17346
+        revision: 9
+  loop: "{{ dashboards }}"
+  loop_control:
+    loop_var: dashboard
+  tags:
+    - services
+    - prometheus
+
+- name: Install OpenEMR
+  ansible.builtin.include_tasks:
+    file: "tasks/k8s/open_emr.yaml"
+  tags:
+    - services
+    - openemr
+
+- name: Setup Pipeline
+  ansible.builtin.include_tasks:
+    file: "tasks/k8s/pipeline.yaml"
+  tags:
+    - services
+    - pipeline
+
+# Putting this last to avoid triggers from other services being deployed
+- name: Install falco
+  ansible.builtin.include_tasks:
+    file: "tasks/k8s/falco.yaml"
+  tags:
+    - services
+    - falco

@@ -1,0 +1,16 @@
+- name: Restart linux-graylog-sidecar
+  ansible.builtin.systemd:
+    name: graylog-sidecar
+    state: restarted
+    daemon_reload: True
+  become: true
+  become_method: sudo
+  become_user: root
+
+- name: Restart win-graylog-sidecar
+  ansible.windows.win_service:
+    name: graylog-sidecar
+    state: restarted
+  become: true
+  become_method: runas
+  become_user: "{{ ansible_user }}@{{ adserver_domain }}"

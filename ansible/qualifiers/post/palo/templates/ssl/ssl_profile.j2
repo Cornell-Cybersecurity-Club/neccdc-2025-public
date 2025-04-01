@@ -1,0 +1,20 @@
+<ssl-tls-service-profile>
+    <entry name="{{ certificate_name }}">
+        <protocol-settings>
+            <min-version>tls1-2</min-version>
+            <max-version>tls1-3</max-version>
+            <keyxchg-algo-rsa>yes</keyxchg-algo-rsa>
+            <keyxchg-algo-dhe>yes</keyxchg-algo-dhe>
+            <keyxchg-algo-ecdhe>yes</keyxchg-algo-ecdhe>
+            <enc-algo-aes-128-cbc>yes</enc-algo-aes-128-cbc>
+            <enc-algo-aes-128-gcm>yes</enc-algo-aes-128-gcm>
+            <enc-algo-aes-chacha20-poly1305>yes</enc-algo-aes-chacha20-poly1305>
+            <enc-algo-aes-256-cbc>yes</enc-algo-aes-256-cbc>
+            <enc-algo-aes-256-gcm>yes</enc-algo-aes-256-gcm>
+            <auth-algo-sha1>yes</auth-algo-sha1>
+            <auth-algo-sha256>yes</auth-algo-sha256>
+            <auth-algo-sha384>yes</auth-algo-sha384>
+        </protocol-settings>
+        <certificate>{{ certificate_name }}</certificate>
+    </entry>
+</ssl-tls-service-profile>

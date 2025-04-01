@@ -1,0 +1,21 @@
+{
+    "name": "SSH_Kube_CTRL",
+    "type": "ssh",
+    "score_weight": 2,
+    "definition": {
+        "Host": "{{.Host}}",
+        "Username": "{{.Username}}",
+        "Password": "{{.Password}}",
+        "Cmd": "systemctl is-active kubelet",
+        "MatchContent": "true",
+        "ContentRegex": "active",
+        "Port": "22"
+    },
+    "attributes": {
+        "admin": {
+            "Host": "10.0.{{.TeamNumber}}.250",
+            "Username": "black-team",
+            "Password": "example-password"
+        }
+    }
+}

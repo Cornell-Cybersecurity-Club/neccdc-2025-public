@@ -1,0 +1,23 @@
+{
+    "name": "HTTP_ca_website",
+    "type": "http",
+    "score_weight": 2,
+    "definition": {
+        "requests": [
+            {
+                "host": "{{.Host}}",
+                "path": "/",
+                "https": false,
+                "port": 80,
+                "method": "GET",
+                "matchcode": true,
+                "code": 200
+            }
+        ]
+    },
+    "attributes": {
+        "admin": {
+            "Host": "10.0.{{.TeamNumber}}.32"
+        }
+    }
+}

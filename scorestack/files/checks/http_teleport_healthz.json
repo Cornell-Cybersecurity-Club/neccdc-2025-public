@@ -1,0 +1,25 @@
+{
+    "name": "HTTP_teleport_healthz",
+    "type": "http",
+    "score_weight": 3,
+    "definition": {
+        "requests": [
+            {
+                "host": "{{.Host}}",
+                "path": "/healthz",
+                "https": false,
+                "port": 3000,
+                "method": "GET",
+                "matchcode": true,
+                "code": 200,
+                "matchcontent": true,
+                "contentregex": "ok"
+            }
+        ]
+    },
+    "attributes": {
+        "admin": {
+            "Host": "10.0.{{.TeamNumber}}.180"
+        }
+    }
+}

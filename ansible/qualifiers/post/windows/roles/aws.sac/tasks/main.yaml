@@ -1,0 +1,8 @@
+---
+- name: Include enabled tasks
+  ansible.builtin.include_tasks: enabled.yaml
+  when: enabled == true
+
+- name: Include disabled tasks
+  ansible.builtin.include_tasks: disabled.yaml
+  when: enabled == false

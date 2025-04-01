@@ -1,0 +1,54 @@
+id,parentId,username,name,lastName,email,department,position,image
+1,2,philip.thompson,Philip,Thompson,philip.thompson@placebo-pharma.com,Executive,COO,https://bumbeishvili.github.io/avatars/avatars/portrait12.png
+2,,evelyn.turner,Evelyn,Turner,evelyn.turner@placebo-pharma.com,Executive,CEO,https://bumbeishvili.github.io/avatars/avatars/portrait85.png
+3,2,eduard.meunier,Eduard,Meunier,eduard.meunier@placebo-pharma.com,Executive,CFO,https://bumbeishvili.github.io/avatars/avatars/portrait16.png
+4,2,malou.poulsen,Malou,Poulsen,malou.poulsen@placebo-pharma.com,Executive,CTO,https://bumbeishvili.github.io/avatars/avatars/portrait17.png
+5,2,kleopatra.dzerovich,Kleopatra,Dzerovich,kleopatra.dzerovich@placebo-pharma.com,Executive,CCO,https://bumbeishvili.github.io/avatars/avatars/portrait18.png
+6,4,frederick.pena,Frederick,Pena,frederick.pena@placebo-pharma.com,R&D,Manager,https://bumbeishvili.github.io/avatars/avatars/portrait19.png
+7,6,aubin.clement,Aubin,Clement,aubin.clement@placebo-pharma.com,R&D,Data Scientist,https://bumbeishvili.github.io/avatars/avatars/portrait86.png
+8,6,amanda.dean,Amanda,Dean,amanda.dean@placebo-pharma.com,R&D,Data Scientist,https://bumbeishvili.github.io/avatars/avatars/portrait89.png
+9,6,kasper.haataja,Kasper,Haataja,kasper.haataja@placebo-pharma.com,R&D,Data Scientist,https://bumbeishvili.github.io/avatars/avatars/portrait61.png
+10,4,simona.rolland,Simona,Rolland,simona.rolland@placebo-pharma.com,R&D,Project Manager,https://bumbeishvili.github.io/avatars/avatars/portrait20.png
+11,10,draga.nenezic,Draga,Nenezic,draga.nenezic@placebo-pharma.com,R&D,Biomedical Engineer,https://bumbeishvili.github.io/avatars/avatars/portrait21.png
+12,10,dona.gugale,Dona,Gugale,dona.gugale@placebo-pharma.com,R&D,Biomedical Engineer,https://bumbeishvili.github.io/avatars/avatars/portrait22.png
+13,10,carter.singh,Carter,Singh,carter.singh@placebo-pharma.com,R&D,Laboratory Technician,https://bumbeishvili.github.io/avatars/avatars/portrait23.png
+14,10,beatrice.morin,Beatrice,Morin,beatrice.morin@placebo-pharma.com,R&D,Laboratory Technician,https://bumbeishvili.github.io/avatars/avatars/portrait1.png
+15,10,nicklas.jorgensen,Nicklas,Jorgensen,nicklas.jorgensen@placebo-pharma.com,R&D,Laboratory Technician Intern,https://bumbeishvili.github.io/avatars/avatars/portrait24.png
+16,10,theo.taylor,Theo,Taylor,theo.taylor@placebo-pharma.com,R&D,Biostatistician,https://bumbeishvili.github.io/avatars/avatars/portrait26.png
+17,4,byron.alexander,Byron,Alexander,byron.alexander@placebo-pharma.com,R&D,Project Manager,https://bumbeishvili.github.io/avatars/avatars/portrait2.png
+18,17,burim.garnier,Burim,Garnier,burim.garnier@placebo-pharma.com,R&D,Research Scientist,https://bumbeishvili.github.io/avatars/avatars/portrait25.png
+19,17,vildan.sandalci,Vildan,Sandalci,vildan.sandalci@placebo-pharma.com,R&D,Research Scientist,https://bumbeishvili.github.io/avatars/avatars/portrait27.png
+20,17,rose.harris,Rose,Harris,rose.harris@placebo-pharma.com,R&D,Research Scientist,https://bumbeishvili.github.io/avatars/avatars/portrait3.png
+21,17,daniel.leroux,Daniel,Leroux,daniel.leroux@placebo-pharma.com,R&D,Clinical Research Associate,https://bumbeishvili.github.io/avatars/avatars/portrait28.png
+22,17,mary.woods,Mary,Woods,mary.woods@placebo-pharma.com,R&D,Clinical Research Associate,https://bumbeishvili.github.io/avatars/avatars/portrait33.png
+23,17,emilie.moller,Emilie,Moller,emilie.moller@placebo-pharma.com,R&D,Clinical Research Associate,https://bumbeishvili.github.io/avatars/avatars/portrait31.png
+24,4,romain.bourgeois,Romain,Bourgeois,romain.bourgeois@placebo-pharma.com,IT,IT Manager,https://bumbeishvili.github.io/avatars/avatars/portrait4.png
+25,24,ariadna.pasko,Ariadna,Pasko,ariadna.pasko@placebo-pharma.com,IT,Database Engineer,https://bumbeishvili.github.io/avatars/avatars/portrait39.png
+26,24,benjamin.white,Benjamin,White,benjamin.white@placebo-pharma.com,IT,Network Administrator,https://bumbeishvili.github.io/avatars/avatars/portrait5.png
+27,24,kubra.yildizoglu,Kubra,Yildizoglu,kubra.yildizoglu@placebo-pharma.com,IT,Network Administrator,https://bumbeishvili.github.io/avatars/avatars/portrait10.png
+28,24,marcel.brunet,Marcel,Brunet,marcel.brunet@placebo-pharma.com,IT,System Administrator,https://bumbeishvili.github.io/avatars/avatars/portrait41.png
+29,24,gary.reynolds,Gary,Reynolds,gary.reynolds@placebo-pharma.com,IT,System Administrator,https://bumbeishvili.github.io/avatars/avatars/portrait48.png
+30,24,alejandro.aguilar,Alejandro,Aguilar,alejandro.aguilar@placebo-pharma.com,IT,System Administrator Intern,https://bumbeishvili.github.io/avatars/avatars/portrait11.png
+31,24,lakshmi.suvarna,Lakshmi,Suvarna,lakshmi.suvarna@placebo-pharma.com,IT,Support,https://bumbeishvili.github.io/avatars/avatars/portrait50.png
+32,24,georgina.gonzales,Georgina,Gonzales,georgina.gonzales@placebo-pharma.com,IT,Support,https://bumbeishvili.github.io/avatars/avatars/portrait51.png
+33,5,matthew.carr,Matthew,Carr,matthew.carr@placebo-pharma.com,IT,Security Engineer,https://bumbeishvili.github.io/avatars/avatars/portrait52.png
+34,33,duilio.da.mota,Duilio,da Mota,duilio.damota@placebo-pharma.com,IT,SOC Analyst,https://bumbeishvili.github.io/avatars/avatars/portrait54.png
+35,33,bianca.armas,Bianca,Armas,bianca.armas@placebo-pharma.com,IT,Operations Security,https://bumbeishvili.github.io/avatars/avatars/portrait56.png
+36,5,lance.wuite,Lance,Wuite,lance.wuite@placebo-pharma.com,Compliance,Compliance Manager,https://bumbeishvili.github.io/avatars/avatars/portrait13.png
+37,36,emina.weberg,Emina,Weberg,emina.weberg@placebo-pharma.com,Compliance,Risk Manager,https://bumbeishvili.github.io/avatars/avatars/portrait6.png
+38,36,paige.cooper,Paige,Cooper,paige.cooper@placebo-pharma.com,Compliance,Auditor,https://bumbeishvili.github.io/avatars/avatars/portrait57.png
+39,36,andrea.pierre,Andrea,Pierre,andrea.pierre@placebo-pharma.com,Compliance,Auditor Intern,https://bumbeishvili.github.io/avatars/avatars/portrait58.png
+40,3,abhimanyu.taj,Abhimanyu,Taj,abhimanyu.taj@placebo-pharma.com,Finance,Accounting,https://bumbeishvili.github.io/avatars/avatars/portrait65.png
+41,3,eleni.galle,Eleni,Galle,eleni.galle@placebo-pharma.com,Finance,Accounting,https://bumbeishvili.github.io/avatars/avatars/portrait67.png
+42,3,gorun.petrishin,Gorun,Petrishin,gorun.petrishin@placebo-pharma.com,Finance,Operations Management,https://bumbeishvili.github.io/avatars/avatars/portrait14.png
+43,1,alexis.gauthier,Alexis,Gauthier,alexis.gauthier@placebo-pharma.com,Marketing,Director of Marketing,https://bumbeishvili.github.io/avatars/avatars/portrait71.png
+44,43,chad.fisher,Chad,Fisher,chad.fisher@placebo-pharma.com,Marketing,Marketing,https://bumbeishvili.github.io/avatars/avatars/portrait73.png
+45,43,oktaviya.lagno,Oktaviya,Lagno,oktaviya.lagno@placebo-pharma.com,Marketing,Marketing Intern,https://bumbeishvili.github.io/avatars/avatars/portrait79.png
+46,1,moustafa.janmaat,Moustafa,Janmaat,moustafa.janmaat@placebo-pharma.com,HR,Human Resources,https://bumbeishvili.github.io/avatars/avatars/portrait81.png
+47,1,surma.marusik,Surma,Marusik,surma.marusik@placebo-pharma.com,HR,Human Resources,https://bumbeishvili.github.io/avatars/avatars/portrait15.png
+48,3,claro.ramos,Claro,Ramos,claro.ramos@placebo-pharma.com,Sales,Sales Manager,https://bumbeishvili.github.io/avatars/avatars/portrait82.png
+49,48,marcus.jimenez,Marcus,Jimenez,marcus.jimenez@placebo-pharma.com,Sales,Sales Representative,https://bumbeishvili.github.io/avatars/avatars/portrait83.png
+50,48,otto.grytten,Otto,Grytten,otto.grytten@placebo-pharma.com,Sales,Sales Representative,https://bumbeishvili.github.io/avatars/avatars/portrait32.png
+51,48,eliab.jesus,Eliab,Jesus,eliab.jesus@placebo-pharma.com,Sales,Sales Representative,https://bumbeishvili.github.io/avatars/avatars/portrait84.png
+52,48,arttu.harju,Arttu,Harju,arttu.harju@placebo-pharma.com,Sales,Sales Representative Intern,https://bumbeishvili.github.io/avatars/avatars/portrait87.png
+53,48,claudete.farias,Claudete,Farias,claudete.farias@placebo-pharma.com,Sales,Sales Representative Intern,https://bumbeishvili.github.io/avatars/avatars/portrait90.png

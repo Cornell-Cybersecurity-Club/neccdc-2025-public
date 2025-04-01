@@ -1,0 +1,55 @@
+public_domain: '{{team}}.placebo-pharma.com'
+
+# POST-STAGE
+interfaces:
+  public:
+    if_name: 'ethernet1/1'
+    mode: 'layer3'
+    enable_dhcp: true
+    create_default_route: true
+    comment: '{{ public_eip_address | default("EIP Skipped") }}'
+    management_profile: 'InboundProfile'
+    zone_name: '{{ zones.public.name }}'
+    vr_name: 'default'
+  private:
+    if_name: 'ethernet1/2'
+    mode: 'layer3'
+    enable_dhcp: true
+    create_default_route: false
+    comment: '{{ team_address.firewall_private | default("Private interface") }}'
+    management_profile: 'DefaultProfile'
+    zone_name: '{{ zones.private.name }}'
+    vr_name: 'default'
+  dmz:
+    if_name: 'ethernet1/3'
+    mode: 'layer3'
+    enable_dhcp: true
+    create_default_route: false
+    comment: '{{ team_address.firewall_dmz | default("DMZ interface") }}'
+    management_profile: 'DefaultProfile'
+    zone_name: '{{ zones.dmz.name }}'
+    vr_name: 'default'
+
+# PRE-STAGE
+zones:
+  public:
+    name: 'public'
+    mode: 'layer3'
+  private:
+    name: 'private'
+    mode: 'layer3'
+  dmz:
+    name: 'dmz'
+    mode: 'layer3'
+
+# PRE-STAGE
+# CONFIG-ELEMENT
+config_system: '{{ lookup("template", "system.j2") }}'
+config_services: '{{ lookup("template", "services.j2") }}'
+
+# POST-STAGE
+# CONFIG-ELEMENT
+config_ssl_profile: '{{ lookup("template", "ssl/ssl_profile.j2") }}'
+certificate_name: "Placebo Pharma Inc"
+
+auth_users: '{{ lookup("template", "auth/users.j2") }}'

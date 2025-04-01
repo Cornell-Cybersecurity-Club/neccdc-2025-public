@@ -1,0 +1,56 @@
+---
+- name: Copy user config file
+  ansible.builtin.template:
+    src: templates/user.yaml
+    dest: "/teleport/users/{{ username }}.yaml"
+    mode: "0644"
+    owner: root
+    group: root
+  tags:
+    - teleport
+    - teleport_users
+
+- name: Create Teleport user
+  ansible.builtin.command:
+    cmd: "/usr/local/bin/tctl create -f /teleport/users/{{ username }}.yaml"
+  tags:
+    - teleport
+    - teleport_users
+
+- name: Create Teleport user
+  ansible.builtin.command:
+    cmd: "/usr/local/bin/tctl users reset {{ username }}"
+  register: teleport_user
+  tags:
+    - teleport
+    - teleport_users
+
+- name: Get csrf token
+  ansible.builtin.uri:
+    url: "{{ teleport_user.stdout_lines[1] }}"
+    method: GET
+    status_code: 200
+    validate_certs: false
+  register: teleport_csrf_token
+  tags:
+    - teleport
+    - teleport_users
+
+- name: Reset Teleport password
+  ansible.builtin.uri:
+    url: "https://{{ teleport_server_dns_address }}/v1/webapi/users/password/token"
+    method: PUT
+    body_format: json
+    body:
+      deviceName: "black-team"
+      password: "{{ password | b64encode }}"
+      second_factor_token: ""
+      token: "{{ (teleport_user.stdout_lines[1] | split('/'))[-1] }}"
+    headers:
+      X-CSRF-Token: "{{ teleport_csrf_token.cookies['__Host-grv_csrf'] }}"
+      Cookie: "{{ teleport_csrf_token.cookies_string }}"
+    status_code: 200
+    validate_certs: false
+  tags:
+    - teleport
+    - teleport_users

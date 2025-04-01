@@ -1,0 +1,22 @@
+---
+- name: Install and Configure Sidecar on Ubuntu
+  when:
+    - ansible_facts['os_family'] == 'Debian'
+  block:
+    - name: Install sidecar
+      ansible.builtin.include_tasks:
+        file: ubuntu/install-sidecar.yml
+  become: true
+  become_method: sudo
+  become_user: root
+
+- name: Install and Configure Sidecar on Windows
+  when:
+    - ansible_facts['os_family'] == 'Windows'
+  block:
+    - name: Configure sidecar
+      ansible.builtin.include_tasks:
+        file: windows/install-sidecar.yml
+  become: true
+  become_method: runas
+  become_user: "{{ ansible_user }}@{{ adserver_domain }}"

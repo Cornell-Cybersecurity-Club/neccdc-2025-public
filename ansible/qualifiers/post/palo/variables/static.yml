@@ -1,0 +1,142 @@
+# PRE-STAGE
+address_objects:
+  ip_public:
+    name: "{{ team_address.firewall_public }}"
+    value: "{{ team_address.firewall_public }}"
+  ip_private:
+    name: "{{ team_address.firewall_private }}"
+    value: "{{ team_address.firewall_private }}"
+  ip_dmz:
+    name: "{{ team_address.firewall_dmz }}"
+    value: "{{ team_address.firewall_dmz }}"
+  ctrl_plane:
+    name: "ctrl_plane_{{ team_address.ctrl_plane }}"
+    value: "{{ team_address.ctrl_plane }}"
+  database:
+    name: "database_{{ team_address.database }}"
+    value: "{{ team_address.database }}"
+  graylog:
+    name: "graylog_{{ team_address.graylog }}"
+    value: "{{ team_address.graylog }}"
+  nginx:
+    name: "nginx_{{ team_address.nginx }}"
+    value: "{{ team_address.nginx }}"
+  node_1:
+    name: "node_1_{{ team_address.node_1 }}"
+    value: "{{ team_address.node_1 }}"
+  node_2:
+    name: "node_2_{{ team_address.node_2 }}"
+    value: "{{ team_address.node_2 }}"
+  node_3:
+    name: "node_3_{{ team_address.node_3 }}"
+    value: "{{ team_address.node_3 }}"
+  windows_ca:
+    name: "windows_ca_{{ team_address.windows_ca }}"
+    value: "{{ team_address.windows_ca }}"
+  windows_dc:
+    name: "windows_dc_{{ team_address.windows_dc }}"
+    value: "{{ team_address.windows_dc }}"
+  windows_workstation:
+    name: "windows_workstation_{{ team_address.windows_workstation }}"
+    value: "{{ team_address.windows_workstation }}"
+
+# PRE-STAGE
+management_profiles:
+  - name: 'DefaultProfile'
+    ping: true
+    ssh: true
+    http: true
+    https: true
+    telnet: true
+  - name: 'InboundProfile'
+    ping: true
+    ssh: true
+    http: false
+    https: false
+    telnet: true
+
+# PRE-STAGE
+service_objects:
+  tcp_graylog:
+    name: 'service-graylog'
+    protocol: 'tcp'
+    port: '9000'
+    description: 'HTTP on tcp/9000'
+  tcp_ldap:
+    name: 'service-ldap'
+    protocol: 'tcp'
+    port: '389'
+    description: 'LDAP on tcp/389'
+  tcp_ldap_ssl:
+    name: 'service-ldap-ssl'
+    protocol: 'tcp'
+    port: '636'
+    description: 'LDAP SSL on tcp/636'
+  tcp_kerberos:
+    name: 'service-kerberos-tcp'
+    protocol: 'tcp'
+    port: '88'
+    description: 'Kerberos on tcp/88'
+  udp_kerberos:
+    name: 'service-kerberos-udp'
+    protocol: 'udp'
+    port: '88'
+    description: 'Kerberos on udp/88'
+  tcp_smb:
+    name: 'service-smb'
+    protocol: 'tcp'
+    port: '445'
+    description: 'SMB on tcp/445'
+  tcp_dns:
+    name: 'service-dns-tcp'
+    protocol: 'tcp'
+    port: '53'
+    description: 'DNS on tcp/53'
+  udp_dns:
+    name: 'service-dns-udp'
+    protocol: 'udp'
+    port: '53'
+    description: 'DNS on udp/53'
+
+service_groups:
+  kerberos:
+    name: 'sg-kerberos'
+    value:
+      - '{{ service_objects.tcp_kerberos.name }}'
+      - '{{ service_objects.udp_kerberos.name }}'
+  ldap:
+    name: 'sg-ldap'
+    value:
+      - '{{ service_objects.tcp_ldap.name }}'
+      - '{{ service_objects.tcp_ldap_ssl.name }}'
+  dns:
+    name: 'sg-dns'
+    value:
+      - '{{ service_objects.tcp_dns.name }}'
+      - '{{ service_objects.udp_dns.name }}'
+
+# PRE-STAGE
+applications:
+  - name: 'kubernetes'
+    default_port: ['tcp/6443','tcp/10250','tcp/10251','tcp/30443','tcp/30080']
+
+# PRE-STAGE
+tag_objects:
+  public:
+    name: 'public'
+    color: 'red-orange'
+  private:
+    name: 'private'
+    color: 'blue'
+  dmz:
+    name: 'dmz'
+    color: 'red'
+  production:
+    name: 'production'
+    color: 'green'
+  testing:
+    name: 'testing'
+    color: 'yellow'
+  internal:
+    name: 'internal'
+    color: 'peach'

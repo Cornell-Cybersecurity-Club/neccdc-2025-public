@@ -1,0 +1,341 @@
+<filter>
+	<rule>
+		<id></id>
+		<tracker>1740339646</tracker>
+		<type>pass</type>
+		<ipprotocol>inet</ipprotocol>
+		<tag></tag>
+		<tagged></tagged>
+		<direction>any</direction>
+		<quick>yes</quick>
+		<floating>yes</floating>
+		<interface>any</interface>
+		<max></max>
+		<max-src-nodes></max-src-nodes>
+		<max-src-conn></max-src-conn>
+		<max-src-states></max-src-states>
+		<statetimeout></statetimeout>
+		<statetype><![CDATA[keep state]]></statetype>
+		<os></os>
+		<source>
+			<address>Private_Networks</address>
+		</source>
+		<destination>
+			<any></any>
+		</destination>
+		<descr></descr>
+		<created>
+			<time>1740339646</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</created>
+		<updated>
+			<time>1741838492</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</updated>
+	</rule>
+	<rule>
+		<type>pass</type>
+		<interface>wan</interface>
+		<ipprotocol>inet</ipprotocol>
+		<statetype><![CDATA[keep state]]></statetype>
+		<protocol>icmp</protocol>
+		<source>
+			<any></any>
+		</source>
+		<destination>
+			<network>wanip</network>
+		</destination>
+		<descr><![CDATA[Default ICMP rule]]></descr>
+		<tracker>1738794847</tracker>
+	</rule>
+	<rule>
+		<type>pass</type>
+		<interface>wan</interface>
+		<ipprotocol>inet</ipprotocol>
+		<statetype><![CDATA[keep state]]></statetype>
+		<protocol>tcp</protocol>
+		<source>
+			<any></any>
+		</source>
+		<destination>
+			<network>wanip</network>
+			<port>22</port>
+		</destination>
+		<descr><![CDATA[Default SSH rule _replace_src_with_mgmtnet_]]></descr>
+		<tracker>1738794847</tracker>
+	</rule>
+	<rule>
+		<type>pass</type>
+		<interface>wan</interface>
+		<ipprotocol>inet</ipprotocol>
+		<statetype><![CDATA[keep state]]></statetype>
+		<protocol>tcp</protocol>
+		<source>
+			<any></any>
+		</source>
+		<destination>
+			<network>wanip</network>
+			<port>443</port>
+		</destination>
+		<descr><![CDATA[Default HTTPS rule _replace_src_with_mgmtnet_]]></descr>
+		<tracker>1738794847</tracker>
+	</rule>
+	<rule>
+		<type>pass</type>
+		<interface>wan</interface>
+		<ipprotocol>inet</ipprotocol>
+		<statetype><![CDATA[keep state]]></statetype>
+		<protocol>tcp</protocol>
+		<source>
+			<any></any>
+		</source>
+		<destination>
+			<network>wanip</network>
+			<port>80</port>
+		</destination>
+		<descr><![CDATA[Default HTTP rule _replace_src_with_mgmtnet_]]></descr>
+		<tracker>1738794847</tracker>
+	</rule>
+	<rule>
+		<id></id>
+		<tracker>1740240358</tracker>
+		<type>pass</type>
+		<interface>wan</interface>
+		<ipprotocol>inet</ipprotocol>
+		<tag></tag>
+		<tagged></tagged>
+		<max></max>
+		<max-src-nodes></max-src-nodes>
+		<max-src-conn></max-src-conn>
+		<max-src-states></max-src-states>
+		<statetimeout></statetimeout>
+		<statetype><![CDATA[keep state]]></statetype>
+		<os></os>
+		<protocol>tcp</protocol>
+		<source>
+			<any></any>
+		</source>
+		<destination>
+			<network>wanip</network>
+			<port>FirewallManagement</port>
+		</destination>
+		<descr><![CDATA[Default rule _replace_src_with_mgmtnet_]]></descr>
+		<updated>
+			<time>1740240358</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</updated>
+		<created>
+			<time>1740240358</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</created>
+	</rule>
+	<rule>
+		<type>pass</type>
+		<interface>lan</interface>
+		<ipprotocol>inet</ipprotocol>
+		<source>
+			<network>lan</network>
+		</source>
+		<destination>
+			<any></any>
+		</destination>
+		<descr><![CDATA[Default allow LAN to any rule]]></descr>
+		<tracker>0100000101</tracker>
+	</rule>
+	<rule>
+		<id></id>
+		<tracker>1740240376</tracker>
+		<type>pass</type>
+		<interface>lan</interface>
+		<ipprotocol>inet</ipprotocol>
+		<tag></tag>
+		<tagged></tagged>
+		<max></max>
+		<max-src-nodes></max-src-nodes>
+		<max-src-conn></max-src-conn>
+		<max-src-states></max-src-states>
+		<statetimeout></statetimeout>
+		<statetype><![CDATA[keep state]]></statetype>
+		<os></os>
+		<protocol>tcp</protocol>
+		<source>
+			<any></any>
+		</source>
+		<destination>
+			<network>lanip</network>
+			<port>FirewallManagement</port>
+		</destination>
+		<descr><![CDATA[Default rule _replace_src_with_mgmtnet_]]></descr>
+		<updated>
+			<time>1740240376</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</updated>
+		<created>
+			<time>1740240376</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</created>
+	</rule>
+	<rule>
+		<type>pass</type>
+		<interface>enc0</interface>
+		<ipprotocol>inet46</ipprotocol>
+		<source>
+			<any></any>
+		</source>
+		<destination>
+			<any></any>
+		</destination>
+		<descr><![CDATA[Default allow IPsec to any rule]]></descr>
+		<tracker>1738794847</tracker>
+	</rule>
+	<rule>
+		<type>pass</type>
+		<interface>openvpn</interface>
+		<ipprotocol>inet</ipprotocol>
+		<statetype><![CDATA[keep state]]></statetype>
+		<source>
+			<any></any>
+		</source>
+		<destination>
+			<any></any>
+		</destination>
+		<descr><![CDATA[Default Traffic from OpenVPN tunnel rule]]></descr>
+		<tracker>1738794847</tracker>
+		<disabled></disabled>
+	</rule>
+	<rule>
+		<id></id>
+		<tracker>1740203840</tracker>
+		<type>pass</type>
+		<interface>opt1</interface>
+		<ipprotocol>inet</ipprotocol>
+		<tag></tag>
+		<tagged></tagged>
+		<max></max>
+		<max-src-nodes></max-src-nodes>
+		<max-src-conn></max-src-conn>
+		<max-src-states></max-src-states>
+		<statetimeout></statetimeout>
+		<statetype><![CDATA[keep state]]></statetype>
+		<os></os>
+		<source>
+			<network>opt1</network>
+		</source>
+		<destination>
+			<any></any>
+		</destination>
+		<descr><![CDATA[Default allow LAN to any rule]]></descr>
+		<created>
+			<time>1740203840</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</created>
+		<updated>
+			<time>1740204291</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</updated>
+	</rule>
+	<rule>
+		<id></id>
+		<tracker>1740240390</tracker>
+		<type>pass</type>
+		<interface>opt1</interface>
+		<ipprotocol>inet</ipprotocol>
+		<tag></tag>
+		<tagged></tagged>
+		<max></max>
+		<max-src-nodes></max-src-nodes>
+		<max-src-conn></max-src-conn>
+		<max-src-states></max-src-states>
+		<statetimeout></statetimeout>
+		<statetype><![CDATA[keep state]]></statetype>
+		<os></os>
+		<protocol>tcp</protocol>
+		<source>
+			<any></any>
+		</source>
+		<destination>
+			<network>opt1ip</network>
+			<port>FirewallManagement</port>
+		</destination>
+		<descr><![CDATA[Default rule _replace_src_with_mgmtnet_]]></descr>
+		<updated>
+			<time>1740240390</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</updated>
+		<created>
+			<time>1740240390</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</created>
+	</rule>
+	<rule>
+		<id></id>
+		<tracker>1741223535</tracker>
+		<type>pass</type>
+		<interface>opt2</interface>
+		<ipprotocol>inet</ipprotocol>
+		<tag></tag>
+		<tagged></tagged>
+		<max></max>
+		<max-src-nodes></max-src-nodes>
+		<max-src-conn></max-src-conn>
+		<max-src-states></max-src-states>
+		<statetimeout></statetimeout>
+		<statetype><![CDATA[keep state]]></statetype>
+		<os></os>
+		<source>
+			<network>opt2</network>
+		</source>
+		<destination>
+			<any></any>
+		</destination>
+		<descr><![CDATA[Default allow LAN to any rule]]></descr>
+		<updated>
+			<time>1741223535</time>
+			<username><![CDATA[admin@10.255.0.1 (Local Database)]]></username>
+		</updated>
+		<created>
+			<time>1741223535</time>
+			<username><![CDATA[admin@10.255.0.1 (Local Database)]]></username>
+		</created>
+	</rule>
+	<rule>
+		<id></id>
+		<tracker>1740240403</tracker>
+		<type>pass</type>
+		<interface>opt2</interface>
+		<ipprotocol>inet</ipprotocol>
+		<tag></tag>
+		<tagged></tagged>
+		<max></max>
+		<max-src-nodes></max-src-nodes>
+		<max-src-conn></max-src-conn>
+		<max-src-states></max-src-states>
+		<statetimeout></statetimeout>
+		<statetype><![CDATA[keep state]]></statetype>
+		<os></os>
+		<protocol>tcp</protocol>
+		<source>
+			<any></any>
+		</source>
+		<destination>
+			<network>opt2ip</network>
+			<port>FirewallManagement</port>
+		</destination>
+		<descr><![CDATA[Default rule _replace_src_with_mgmtnet_]]></descr>
+		<updated>
+			<time>1740240403</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</updated>
+		<created>
+			<time>1740240403</time>
+			<username><![CDATA[admin@192.168.10.120 (Local Database)]]></username>
+		</created>
+	</rule>
+	<separator>
+		<wan></wan>
+		<floatingrules></floatingrules>
+		<opt1></opt1>
+		<internal></internal>
+		<opt2></opt2>
+	</separator>
+</filter>

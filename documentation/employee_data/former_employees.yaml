@@ -1,0 +1,92 @@
+users:
+  - username: valentio.thompson
+    first_name: Valentino
+    last_name: Thompson
+    email: valentio.thompson@placebo-pharma.com
+    password: magic42
+    department: R&D
+    position: Project Manager
+  - username: josefina.renaud
+    first_name: Josefina
+    last_name: Renaud
+    email: josefina.renaud@placebo-pharma.com
+    password: riffraff
+    department: IT
+    position: System Administrator
+  - username: evie.li
+    first_name: Evie
+    last_name: Li
+    email: evie.li@placebo-pharma.com
+    password: piKQei3h
+    department: IT
+    position: Network Administrator
+  - username: nanna.andersen
+    first_name: Nanna
+    last_name: Andersen
+    email: nanna.andersen@placebo-pharma.com
+    password: lkjhgfds
+    department: IT
+    position: Support
+  - username: malthe.jorgensen
+    first_name: Malthe
+    last_name: Jorgensen
+    email: malthe.jorgensen@placebo-pharma.com
+    password: "102030"
+    department: Finance
+    position: Accounting
+  - username: kin.fitzpatrick
+    first_name: Kin
+    last_name: Fitzpatrick
+    email: kin.fitzpatrick@placebo-pharma.com
+    password: FLU2zv3uduRcZvQ
+    department: Sales
+    position: Sales Representative
+  - username: eliab.jesus
+    first_name: Eliab
+    last_name: Jesus
+    email: eliab.jesus@placebo-pharma.com
+    password: greg
+    department: Sales
+    position: Sales Representative
+  - username: arttu.harju
+    first_name: Arttu
+    last_name: Harju
+    email: arttu.harju@placebo-pharma.com
+    password: helmet
+    department: Sales
+    position: Sales Representative
+  - username: oktaviya.lagno
+    first_name: Oktaviya
+    last_name: Lagno
+    email: oktaviya.lagno@placebo-pharma.com
+    password: seamus
+    department: Marketing
+    position: Marketing
+  - username: alejandro.aguilar
+    first_name: Alejandro
+    last_name: Aguilar
+    email: alejandro.aguilar@placebo-pharma.com
+    password: grace
+    department: IT
+    position: System Administrator
+  - username: emilie.moller
+    first_name: Emilie
+    last_name: Moller
+    email: emilie.moller@placebo-pharma.com
+    password: xavier
+    department: R&D
+    position: Clinical Research Associate
+  - username: beatrice.morin
+    first_name: Beatrice
+    last_name: Morin
+    email: beatrice.morin@placebo-pharma.com
+    password: pepsi
+    department: R&D
+    position: Laboratory Technician
+  - username: kasper.haataja
+    first_name: Kasper
+    last_name: Haataja
+    email: kasper.haataja@placebo-pharma.com
+    password: qwert1
+    department: R&D
+    position: Data Scientist

@@ -1,0 +1,143 @@
+---
+- name: Initialize InfluxDB
+  become: true
+  become_user: admin
+  ansible.builtin.command:
+    cmd: >
+      /usr/bin/influx setup
+      --skip-verify --retention 0 --force
+      --host https://database.placebo-pharma.com:8086
+      --username admin
+      --password {{ influxdb_admin_password }}
+      --token {{ influxdb_token }}
+      --org {{ influxdb_org }}
+      --bucket {{ influxdb_bucket }}
+  register: _setup
+  failed_when:
+    - _setup.rc != 0
+    - '"has already been set up" not in _setup.stderr'
+  changed_when: _setup.rc == 0
+  tags:
+    - database
+
+
+- name: Create influx users
+  become: true
+  become_user: admin
+  ansible.builtin.command:
+    cmd: >
+      /usr/bin/influx user create
+      --skip-verify
+      --name {{ item.name }}
+      --org {{ influxdb_org }}
+      --password {{ (item.password + '0' * 8)[:8] }}
+  loop:
+    - name: ariadna.pasko # Database Engineer
+      password: gmoney
+    - name: aubin.clement # Data Scientist
+      password: "1234567"
+    - name: amanda.dean # Data Scientist
+      password: kong
+    - name: marie.jorgensen # Data Scientist
+      password: aside
+    - name: guadalupe.carrera # Data Scientist | Intern
+      password: sunday
+    - name: theo.taylor # Biostatistician
+      password: connie
+    - name: paige.cooper # Auditor
+      password: kenwood
+    - name: kasper.haataja # Data Science | Former employee
+      password: qwert1
+    - name: alejandro.aguilar # System Administrator | Former employee
+      password: grace
+    - name: josefina.renaud # System Administrator | Former employee
+      password: riffraff
+  loop_control:
+    label: "{{ item.name }}"
+  register: _user
+  failed_when:
+    - _user.rc != 0
+    - '"already exists" not in _user.stderr'
+  changed_when: _user.rc == 0
+  tags:
+    - database
+
+
+- name: Create influx bucket
+  become: true
+  become_user: admin
+  ansible.builtin.command:
+    cmd: >
+      /usr/bin/influx bucket create
+      --skip-verify
+      --name {{ item.name }}
+      --description "{{ item.description }}"
+      --retention {{ item.retention }}
+      --org {{ influxdb_org }}
+  loop:
+    - name: HF-Data
+      description: "High Frequency Lab Data"
+      retention: 1h
+  loop_control:
+    label: "{{ item.name }}"
+  register: _bucket
+  failed_when:
+    - _bucket.rc != 0
+    - '"already exists" not in _bucket.stderr'
+  changed_when: _bucket.rc == 0
+  tags:
+    - database
+
+
+- name: Create influx pipeline tokens
+  become: true
+  become_user: admin
+  ansible.builtin.command:
+    cmd: >
+      /usr/bin/influx auth create
+      --skip-verify
+      --json
+      --user ariadna.pasko
+      --description Pipeline
+      --org {{ influxdb_org }}
+      --all-access
+  register: pipeline_token
+  tags:
+    - database
+
+- name: Save pipeline token to file
+  delegate_to: localhost
+  become: false
+  ansible.builtin.copy:
+    content: "{{ (pipeline_token.stdout | from_json).token }}"
+    dest: output/pipeline-token
+    mode: '0600'
+  tags:
+    - database
+
+
+- name: Create influx data science tokens
+  become: true
+  become_user: admin
+  ansible.builtin.command:
+    cmd: >
+      /usr/bin/influx auth create
+      --skip-verify
+      --json
+      --user aubin.clement
+      --description "Data Science"
+      --org {{ influxdb_org }}
+      --read-buckets --write-dashboards --read-dashboards --read-tasks --write-tasks --read-secrets
+  register: data_science_token
+  tags:
+    - database
+
+- name: Save data science token to file
+  delegate_to: localhost
+  become: false
+  ansible.builtin.copy:
+    content: "{{ (data_science_token.stdout | from_json).token }}"
+    dest: output/data-science-token
+    mode: '0600'
+  tags:
+    - database

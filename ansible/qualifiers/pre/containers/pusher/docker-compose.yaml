@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      # - LOG_LEVEL=DEBUG
+      # - SERVER_URL=http://host.docker.internal:5000
+      - LOG_LEVEL=INFO
+      - SERVER_URL=https://pipeline.0.placebo-pharma.com,https://pipeline.1.placebo-pharma.com,https://pipeline.2.placebo-pharma.com,https://pipeline.3.placebo-pharma.com,https://pipeline.4.placebo-pharma.com,https://pipeline.5.placebo-pharma.com,https://pipeline.6.placebo-pharma.com,https://pipeline.7.placebo-pharma.com,https://pipeline.8.placebo-pharma.com,https://pipeline.9.placebo-pharma.com,https://pipeline.10.placebo-pharma.com,https://pipeline.11.placebo-pharma.com,https://pipeline.12.placebo-pharma.com,https://pipeline.13.placebo-pharma.com,https://pipeline.14.placebo-pharma.com,https://pipeline.15.placebo-pharma.com,https://pipeline.16.placebo-pharma.com,https://pipeline.17.placebo-pharma.com,https://pipeline.18.placebo-pharma.com,https://pipeline.19.placebo-pharma.com
+    restart: unless-stopped

@@ -1,0 +1,16 @@
+kind: role
+version: v7
+metadata:
+  name: graylog-admin
+  description: Admin access to Graylog
+spec:
+  options:
+    max_session_ttl: 8h
+  allow:
+    app_labels:
+      app: graylog
+    logins:
+      - admin
+      - '{{internal.logins}}'
+    node_labels:
+      service: graylog

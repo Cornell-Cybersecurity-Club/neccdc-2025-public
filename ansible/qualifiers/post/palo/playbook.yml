@@ -1,0 +1,64 @@
+---
+- name: Setup PaloAlto Firewall
+  hosts: firewall
+  connection: local
+  gather_facts: false
+  vars_files:
+    - variables/main.yml
+    - variables.yml
+    - variables/static.yml
+    - variables/nat.yml
+    - variables/rules.yml
+  vars:
+    device:
+      ip_address: '{{ ansible_host }}'
+      username: admin
+      password: example-password
+
+  tasks:
+    - name: Check if PAN-OS appliance is ready and wait until it is
+      paloaltonetworks.panos.panos_check:
+        provider: "{{ device }}"
+      changed_when: false
+      register: result
+      until: result is not failed and result.msg == 'Device is ready.'
+      retries: 100
+      delay: 15
+      tags: always
+
+    - name: Get public eip for team
+      amazon.aws.ec2_eip_info:
+        filters:
+          tag:team: '{{ team }}'
+      register: eip_addresses
+      tags: eip
+
+    - name: Set host fact for public eip
+      set_fact:
+        public_eip_address: '{{ eip_addresses.addresses[0].public_ip | default(team_address.firewall_public) }}'
+      tags: eip
+
+    - name: Include Pre-Stage tasks
+      ansible.builtin.import_tasks:
+        file: tasks/pre_stage.yml
+      tags: pre_stage
+
+    - name: Include Post-Stage tasks
+      ansible.builtin.import_tasks:
+        file: tasks/post_stage.yml
+      tags: post_stage
+
+    - name: Include Auth tasks
+      ansible.builtin.import_tasks:
+        file: tasks/auth.yml
+      tags: auth
+
+    - name: Include Certificate tasks
+      ansible.builtin.import_tasks:
+        file: tasks/certs.yml
+      tags: certs
+
+    - name: Commit the candidate configuration
+      paloaltonetworks.panos.panos_commit_firewall:
+        provider: '{{ device }}'
+      tags: commit

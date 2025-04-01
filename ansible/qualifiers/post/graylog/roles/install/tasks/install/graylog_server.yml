@@ -1,0 +1,57 @@
+- name: Ensure Graylog Server is installed
+  ansible.builtin.apt:
+    name: graylog-server
+    state: present
+  register: graylog_install_result
+
+- name: Generate SHA-256 hash of admin password
+  ansible.builtin.shell:
+    cmd: echo -n "{{ graylog_admin_password }}" | sha256sum | cut -d' ' -f1
+  register: password_hash
+  no_log: true
+
+- name: Set password hash fact
+  ansible.builtin.set_fact:
+    graylog_server_password_hash: "{{ password_hash.stdout }}"
+  no_log: true
+
+- name: Check if configuration is set and not empty
+  ansible.builtin.shell:
+    cmd: "grep -q '^{{ item.key }}=[^[:space:]]*[^[:space:]]' /etc/graylog/server/server.conf || exit 1"
+  register: config_check
+  failed_when: false
+  ignore_errors: true
+  with_items:
+    - { key: "password_secret", value: "{{ graylog_password_secret }}" }
+    - { key: "root_password_sha2", value: "{{ graylog_server_password_hash }}" }
+    - { key: "http_bind_address", value: "{{ http_bind_address }}" }
+    - { key: "http_publish_uri", value: "{{ http_publish_uri }}" }
+    - { key: "http_external_uri", value: "{{ http_external_uri }}" }
+    - { key: "message_journal_max_size", value: "{{ message_journal_max_size }}" }
+    - { key: "message_journal_max_age", value: "{{ message_journal_max_age }}" }
+  loop_control:
+    index_var: index
+
+- name: Configure Graylog Server settings
+  ansible.builtin.lineinfile:
+    path: /etc/graylog/server/server.conf
+    line: "{{ item.key }} = {{ item.value }}"
+    regexp: "^#?{{ item.key }}"
+    state: present
+  when:
+    - config_check.results | selectattr('item.key', 'equalto', item.key) | map(attribute='rc') | first != 0
+  with_items:
+    - { key: "password_secret", value: "{{ graylog_password_secret }}" }
+    - { key: "root_password_sha2", value: "{{ graylog_server_password_hash }}" }
+    - { key: "http_bind_address", value: "{{ http_bind_address }}" }
+    - { key: "http_publish_uri", value: "{{ http_publish_uri }}" }
+    - { key: "http_external_uri", value: "{{ http_external_uri }}" }
+    - { key: "message_journal_max_size", value: "{{ message_journal_max_size }}" }
+    - { key: "message_journal_max_age", value: "{{ message_journal_max_age }}" }
+  notify: Restart Graylog Server
+
+- name: Ensure Graylog Server is enabled and started
+  ansible.builtin.systemd:
+    name: graylog-server
+    enabled: true
+    state: started

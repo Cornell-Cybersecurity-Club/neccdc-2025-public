@@ -1,0 +1,5 @@
+flask==3.1.0
+matplotlib
+influxdb-client==1.47.0
+prometheus_client==0.21.1
+pytz

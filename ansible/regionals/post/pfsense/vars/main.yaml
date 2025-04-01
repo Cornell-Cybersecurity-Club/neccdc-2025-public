@@ -1,0 +1,68 @@
+# Define pfSense version
+# pfsense_version: "24.11"
+
+# Define mappings for each version
+pfsense_versions:
+  "2.7.2":
+    api_version: "pfSense-2.7.2-pkg-RESTAPI.pkg"
+    sudo_version: "0.3_8"
+    haproxy_version: "0.63_2"
+    interface_convention: "vtnet"
+  "24.03":
+    api_version: "pfSense-24.03-pkg-RESTAPI.pkg"
+    sudo_version: "0.3_8"
+    haproxy_version: "0.63_5"
+    interface_convention: "ena"
+  "24.11":
+    api_version: "pfSense-24.11-pkg-RESTAPI.pkg"
+    sudo_version: "0.3_10"
+    haproxy_version: "0.63_9"
+    interface_convention: "ena"
+
+# Select the correct version details dynamically
+pfsense_api_url: "https://github.com/jaredhendrickson13/pfsense-api/releases/latest/download"
+pfsense_api_pkg: "{{ pfsense_api_url }}/{{ pfsense_versions[pfsense_version].api_version }}"
+
+pfsense_sudo_pkg: "pfSense-pkg-sudo-{{ pfsense_versions[pfsense_version].sudo_version }}"
+pfsense_haproxy_pkg: "pfSense-pkg-haproxy-{{ pfsense_versions[pfsense_version].haproxy_version }}"
+
+interfaces:
+  public:
+    interface: "{{ pfsense_versions[pfsense_version].interface_convention }}0"
+    descr: WAN
+    ipv4_type: dhcp
+    blockpriv: false
+    blockbogons: false
+  lan:
+    interface: "{{ pfsense_versions[pfsense_version].interface_convention }}1"
+    descr: LAN
+    ipv4_type: static
+    ipv4_address: '{{ team_address.firewall_private }}'
+    ipv4_prefixlen: 26
+    blockpriv: false
+    blockbogons: false
+  corp:
+    interface: "{{ pfsense_versions[pfsense_version].interface_convention }}2"
+    descr: CORP
+    ipv4_type: static
+    ipv4_address: '{{ team_address.firewall_corp }}'
+    ipv4_prefixlen: 25
+    blockpriv: false
+    blockbogons: false
+  dmz:
+    interface: "{{ pfsense_versions[pfsense_version].interface_convention }}3"
+    descr: DMZ
+    ipv4_type: static
+    ipv4_address: '{{ team_address.firewall_dmz }}'
+    ipv4_prefixlen: 27
+    blockpriv: false
+    blockbogons: false
+
+unbound_custom_options: |
+  server:
+  private-domain:"placebo-pharma.local"
+  domain-insecure:"placebo-pharma.local"
+  local-zone: "{{ team_domain }}" redirect
+  local-data: "{{ team_domain }} 86400 IN A {{ team_address.firewall_vip }}"
+  local-zone: "teleport.{{ team_domain }}" redirect
+  local-data: "teleport.{{ team_domain }} 86400 IN A {{ team_address.teleport }}"

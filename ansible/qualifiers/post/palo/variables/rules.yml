@@ -1,0 +1,187 @@
+# POST-STAGE
+security_rules:
+  # 'Allow ANY'
+  - rule_name: sg-2887ffcf-54e9
+    source_zone: ['any']
+    source_ip: ['any']
+    destination_zone: ['any']
+    destination_ip: ['any']
+    application: ['any']
+    service: ['any']
+    action: 'allow'
+
+# ----------------- NAT Rules -----------------
+  # 'Allow Public to Nginx HTTP'
+  - rule_name: sg-d0b61393-9939
+    source_zone: ['public']
+    source_ip: ['any']
+    destination_zone: ['public']
+    destination_ip: ['{{ team_address.nginx }}']
+    application: ['any']
+    service: ['service-http', 'service-https']
+    action: 'allow'
+    tags: ['{{ tag_objects.production.name }}']
+  # 'Allow Public to Graylog'
+  - rule_name: sg-a1243364-4b4c
+    source_zone: ['public']
+    source_ip: ['any']
+    destination_zone: ['public']
+    destination_ip: ['{{ team_address.graylog }}']
+    application: ['any']
+    service: ['{{ service_objects.tcp_graylog.name }}']
+    action: 'allow'
+    tags: ['{{ tag_objects.testing.name }}']
+  # 'Allow Public to Windows CA LDAP'
+  - rule_name: sg-d3281ed6-d9c6
+    source_zone: ['public']
+    source_ip: ['any']
+    destination_zone: ['public']
+    destination_ip: ['{{ team_address.windows_ca }}']
+    application: ['any']
+    service: ['{{ service_groups.ldap.name }}']
+    action: 'allow'
+    tags: ['{{ tag_objects.production.name }}']
+  # 'Allow Public to Windows CA Kerberos'
+  - rule_name: sg-9d65ac54-f7ee
+    source_zone: ['public']
+    source_ip: ['any']
+    destination_zone: ['public']
+    destination_ip: ['{{ team_address.windows_ca }}']
+    application: ['any']
+    service: ['{{ service_groups.kerberos.name }}']
+    action: 'allow'
+    tags: ['{{ tag_objects.production.name }}']
+  # 'Allow Public to Windows CA SMB'
+  - rule_name: sg-2a40a072-2f15
+    source_zone: ['public']
+    source_ip: ['any']
+    destination_zone: ['public']
+    destination_ip: ['{{ team_address.windows_ca }}']
+    application: ['any']
+    service: ['{{ service_objects.tcp_smb.name }}']
+    action: 'allow'
+    tags: ['{{ tag_objects.testing.name }}']
+  # 'Allow Public to Windows CA DNS'
+  - rule_name: sg-dab1e50f-0801
+    source_zone: ['public']
+    source_ip: ['any']
+    destination_zone: ['public']
+    destination_ip: ['{{ team_address.windows_ca }}']
+    application: ['any']
+    service: ['{{ service_groups.dns.name }}']
+    action: 'allow'
+    tags: ['{{ tag_objects.production.name }}']
+
+
+# ----------------- Private Rules -----------------
+  # 'Allow Private to Windows CA'
+  - rule_name: sg-835e1651-1027
+    source_zone: ['private']
+    source_ip: ['any']
+    destination_zone: ['dmz']
+    destination_ip: ['{{ team_address.windows_ca }}']
+    application: ['active-directory']
+    service: ['any']
+    action: 'allow'
+    tags: ['{{ tag_objects.internal.name }}']
+  # 'Block telnet from Private to DMZ'
+  - rule_name: sg-d67e0d2e-18b0
+    source_zone: ['private']
+    source_ip: ['any']
+    destination_zone: ['dmz']
+    destination_ip: ['any']
+    application: ['telnet']
+    service: ['application-default']
+    action: 'deny'
+    tags: ['{{ tag_objects.internal.name }}']
+  # 'Allow Private to any'
+  - rule_name: sg-a599958d-c0bb
+    source_zone: ['private']
+    source_ip: ['any']
+    destination_zone: ['any']
+    destination_ip: ['any']
+    application: ['any']
+    service: ['any']
+    action: 'allow'
+    tags: ['{{ tag_objects.internal.name }}']
+  # 'Block FTP from Private to DMZ'
+  - rule_name: sg-e9c95596-c5bd
+    source_zone: ['private']
+    source_ip: ['any']
+    destination_zone: ['dmz']
+    destination_ip: ['any']
+    application: ['ftp']
+    service: ['application-default']
+    action: 'deny'
+    tags: ['{{ tag_objects.internal.name }}']
+
+# ----------------- DMZ Rules -----------------
+  # 'Allow DMZ to Windows DC'
+  - rule_name: sg-f6191722-c950
+    source_zone: ['dmz']
+    source_ip: ['any']
+    destination_zone: ['private']
+    destination_ip: ['{{ team_address.windows_dc }}']
+    application: ['active-directory']
+    service: ['any']
+    action: 'allow'
+    tags: ['{{ tag_objects.internal.name }}']
+  # 'Allow DMZ to any'
+  - rule_name: sg-0ee8d3ff-cde0
+    source_zone: ['dmz']
+    source_ip: ['any']
+    destination_zone: ['any']
+    destination_ip: ['any']
+    application: ['any']
+    service: ['any']
+    action: 'allow'
+    tags: ['{{ tag_objects.internal.name }}']
+  # 'Block telnet from DMZ to Private'
+  - rule_name: sg-94b8a951-db35
+    source_zone: ['dmz']
+    source_ip: ['any']
+    destination_zone: ['private']
+    destination_ip: ['any']
+    application: ['telnet']
+    service: ['application-default']
+    action: 'deny'
+    tags: ['{{ tag_objects.internal.name }}']
+  # Block FTP from DMZ to Private
+  - rule_name: sg-13a54cad-ee8f
+    source_zone: ['dmz']
+    source_ip: ['any']
+    destination_zone: ['private']
+    destination_ip: ['any']
+    application: ['ftp']
+    service: ['application-default']
+    action: 'deny'
+    tags: ['{{ tag_objects.internal.name }}']
+
+# ----------------- Public Rules -----------------
+  # 'Block RDP from Public on Public'
+  - rule_name: sg-289eed89-0218
+    source_zone: ['public']
+    source_ip: ['any']
+    destination_zone: ['public']
+    destination_ip: ['{{ address_objects.ip_public.value }}']
+    application: ['ms-rdp']
+    service: ['application-default']
+    action: 'deny'
+  # 'Allow HTTPS from Public on Public'
+  - rule_name: sg-467d39aa-330a
+    source_zone: ['public']
+    source_ip: ['any']
+    destination_zone: ['any']
+    destination_ip: ['any']
+    application: ['active-directory']
+    service: ['any']
+    action: 'allow'
+  # 'Block FTP from Public on Public'
+  - rule_name: sg-1e52a3d6-330a
+    source_zone: ['public']
+    source_ip: ['any']
+    destination_zone: ['public']
+    destination_ip: ['{{ address_objects.ip_public.value }}']
+    application: ['ftp']
+    service: ['application-default']
+    action: 'deny'

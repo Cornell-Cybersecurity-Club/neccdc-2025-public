@@ -1,0 +1,59 @@
+<optimization>normal</optimization>
+<hostname>{{ hostname }}</hostname>
+<domain>home.arpa</domain>
+<timeservers>2.pfsense.pool.ntp.org</timeservers>
+<webgui>
+    <protocol>https</protocol>
+    <loginautocomplete></loginautocomplete>
+    <nohttpreferercheck></nohttpreferercheck>
+    <max_procs>2</max_procs>
+    <nodnsrebindcheck></nodnsrebindcheck>
+    <noantilockout></noantilockout>
+    <ssl-certref>67c74d290a88d</ssl-certref>
+    <dashboardcolumns>2</dashboardcolumns>
+    <webguicss>pfSense-BETA.css</webguicss>
+    <port>8080</port>
+    <disablehttpredirect></disablehttpredirect>
+    <disablehsts></disablehsts>
+    <roaming>enabled</roaming>
+    <logincss>007faa</logincss>
+</webgui>
+<disablenatreflection>yes</disablenatreflection>
+<disablesegmentationoffloading></disablesegmentationoffloading>
+<disablelargereceiveoffloading></disablelargereceiveoffloading>
+<ipv6allow></ipv6allow>
+<maximumtableentries>400000</maximumtableentries>
+<powerd_ac_mode>hadp</powerd_ac_mode>
+<powerd_battery_mode>hadp</powerd_battery_mode>
+<powerd_normal_mode>hadp</powerd_normal_mode>
+<bogons>
+    <interval>monthly</interval>
+</bogons>
+<hn_altq_enable></hn_altq_enable>
+<serialspeed>115200</serialspeed>
+<enableserial></enableserial>
+<ssh>
+    <enable>enabled</enable>
+    <port>22</port>
+</ssh>
+<enablesshd></enablesshd>
+<already_run_config_upgrade></already_run_config_upgrade>
+<timezone>US/Eastern</timezone>
+<primaryconsole>serial</primaryconsole>
+<sshguard_threshold>30000</sshguard_threshold>
+<sshguard_blocktime>10</sshguard_blocktime>
+<sshguard_detection_time>10</sshguard_detection_time>
+<sshguard_whitelist>10.0.0.0/8 172.16.0.0/12 192.168.0.0/16</sshguard_whitelist>
+<ignoreiscwarning></ignoreiscwarning>
+<disablechecksumoffloading></disablechecksumoffloading>
+<language>en_US</language>
+<dnsallowoverride></dnsallowoverride>
+<dns1host></dns1host>
+<firmware>
+    <disablecheck></disablecheck>
+</firmware>
+<gitsync>
+    <repositoryurl></repositoryurl>
+    <branch></branch>
+</gitsync>
+<pkg_repo_conf_path>24_11</pkg_repo_conf_path>

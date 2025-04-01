@@ -1,0 +1,57 @@
+---
+- name: Deploy load balancer configuration
+  hosts: nginx
+  become: true
+  vars:
+    team_number: "{{ hostvars[inventory_hostname]['team'] }}"
+    team_base_cidr: "{{ team_number | int * 4 }}"
+  tasks:
+    - name: Update password
+      ansible.builtin.user:
+        name: rocky
+        password: "{{ 'example-password' | password_hash('sha512') }}"
+
+    - name: Copy TLS certificate
+      ansible.builtin.copy:
+        src: "../../../../documentation/blue_team/qualifiers/team_{{ team_number }}/certificates/fullchain.crt"
+        dest: /etc/ssl/certs/fullchain.crt
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Copy TLS key
+      ansible.builtin.copy:
+        src: "../../../../documentation/blue_team/qualifiers/team_{{ team_number }}/certificates/private.key"
+        dest: /etc/ssl/certs/private.key
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Copy load balancer configuration template
+      ansible.builtin.template:
+        src: templates/load_balancer.conf.tmpl
+        dest: /etc/nginx/conf.d/load_balancer.conf
+        owner: root
+        group: root
+        mode: '0644'
+      vars:
+        octet_a: "{{ team_base_cidr | int + 2 }}"
+        octet_b: "{{ team_base_cidr | int + 3 }}"
+      notify: Reload nginx
+
+    - name: Copy static website nginx config
+      ansible.builtin.template:
+        src: templates/static.conf.tmpl
+        dest: /etc/nginx/conf.d/static.conf
+        owner: root
+        group: root
+        mode: '0644'
+      vars:
+        nginx_domain: "{{ team_number }}.{{ domain }}"
+      notify: Reload nginx
+
+  handlers:
+    - name: Reload nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded

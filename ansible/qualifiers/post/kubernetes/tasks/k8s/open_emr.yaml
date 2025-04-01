@@ -1,0 +1,87 @@
+---
+
+# https://www.open-emr.org/wiki/index.php/OpenEMR_Downloads
+# https://hub.docker.com/r/openemr/openemr/
+# https://github.com/openemr/openemr-devops/tree/master/docker/openemr/7.0.3
+
+- name: Deploy OpenEMR MySQL
+  become: true
+  become_user: ubuntu
+  kubernetes.core.k8s:
+    state: present
+    src: /home/ubuntu/OpenEMR/mysql.yaml
+  tags:
+    - openemr
+    - services
+
+- name: Deploy OpenEMR App
+  become: true
+  become_user: ubuntu
+  kubernetes.core.k8s:
+    state: present
+    src: /home/ubuntu/OpenEMR/open-emr.yaml
+  tags:
+    - openemr
+    - services
+
+# https://gateway-api.sigs.k8s.io/guides/http-redirect-rewrite/
+- name: Create OpenEMR http route
+  become: true
+  become_user: ubuntu
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: gateway.networking.k8s.io/v1
+      kind: HTTPRoute
+      metadata:
+        name: openemr-http
+        namespace: open-emr
+      spec:
+        parentRefs:
+          - name: traefik
+            namespace: infrastructure
+            sectionName: http
+        hostnames:
+          - "portal.{{ hostvars[inventory_hostname]['team'] }}.placebo-pharma.com"
+        rules:
+          - filters:
+            - type: RequestRedirect
+              requestRedirect:
+                scheme: https
+                statusCode: 301
+  tags:
+    - openemr
+    - services
+
+- name: Create OpenEMR https route
+  become: true
+  become_user: ubuntu
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: gateway.networking.k8s.io/v1
+      kind: HTTPRoute
+      metadata:
+        name: openemr-https
+        namespace: open-emr
+      spec:
+        parentRefs:
+          - name: traefik
+            namespace: infrastructure
+            sectionName: https
+        hostnames:
+          - "portal.{{ hostvars[inventory_hostname]['team'] }}.placebo-pharma.com"
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - name: openemr
+                namespace: open-emr
+                # Can't use 443 because there is not support for TLS policy
+                # https://gateway-api.sigs.k8s.io/api-types/backendtlspolicy/
+                port: 80
+  tags:
+    - openemr
+    - services

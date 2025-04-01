@@ -1,0 +1,100 @@
+---
+base_domain: placebo-pharma.com
+elk_ssl: false
+kibana_url: "{{ elk_ssl | ternary('https://localhost:5601', 'http://localhost:5601') }}"
+elastic_url: "{{ elk_ssl | ternary('https://localhost:9200', 'http://localhost:9200') }}"
+elastic_username: elastic
+elastic_password: example-password
+elastic_ram_gb: 13
+elastic_snapshot_repository: "backup"
+elastic_snapshot_directory: /mount/backups
+elastic_snapshot_policy: default
+
+dynamicbeat_username: dynamicbeat
+dynamicbeat_password: 2kkC5dNvd442
+dynamicbeat_verbose: true
+dynamicbeat_home: /opt/dynamicbeat
+dynamicbeat_bin_path: "{{ dynamicbeat_home }}/dynamicbeat"
+dynamicbeat_config_path: "{{ dynamicbeat_home }}/dynamicbeat.yml"
+dynamicbeat_checks_src: files/checks/
+dynamicbeat_checks_dest: "{{ dynamicbeat_home }}/checks.d"
+dynamicbeat_checks_command: "{{ dynamicbeat_bin_path }} setup checks {{ dynamicbeat_checks_dest }} --config {{ dynamicbeat_config_path }}"
+
+dynamicbeat_roles:
+  - name: common
+    request_body:
+      indices:
+        - names:
+            - checks
+          privileges:
+            - read
+      applications:
+        - application: "kibana-.kibana"
+          privileges:
+            - space_read
+          resources:
+            - "space:scorestack"
+  - name: spectator
+    request_body:
+      indices:
+        - names:
+            - results-all
+          privileges:
+            - read
+
+dynamicbeat_users:
+  - name: whiteteam
+    password: 39lG9MD1BZE6
+    roles: ["common", "spectator"]
+  - name: redteam
+    password: ApWwdF97L4KN
+    roles: ["common", "spectator"]
+  - name: guest
+    password: Xix081U22eBk
+    roles: ["common", "spectator"]
+
+dynamicbeat_teams:
+- name: team00
+  elk_password: D1lW7sR4gD4tQ8yF
+  overrides:
+    TeamNumber: 0
+- name: team01
+  elk_password: M5wY5oK3wY2eQ4yC
+  overrides:
+    TeamNumber: 1
+- name: team02
+  elk_password: L2lY7jV9oM9lY0hG
+  overrides:
+    TeamNumber: 2
+- name: team03
+  elk_password: B8qH7dT7pL8rB6fX
+  overrides:
+    TeamNumber: 3
+- name: team04
+  elk_password: B1eB8qC6jE0mQ2gE
+  overrides:
+    TeamNumber: 4
+- name: team05
+  elk_password: I9oG5tI0mD7sK0lM
+  overrides:
+    TeamNumber: 5
+- name: team06
+  elk_password: D8xZ2bN8mY8cQ3hI
+  overrides:
+    TeamNumber: 6
+- name: team07
+  elk_password: T5hL9nG5wS2mM4uU
+  overrides:
+    TeamNumber: 7
+- name: team08
+  elk_password: F5uN1eX3iX9yR9zD
+  overrides:
+    TeamNumber: 8
+- name: team09
+  elk_password: E6yI6kU4uC6lT5sJ
+  overrides:
+    TeamNumber: 9
+- name: team10
+  elk_password: U3qL1uH1hK2eN3sO
+  overrides:
+    TeamNumber: 10

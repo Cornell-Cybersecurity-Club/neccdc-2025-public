@@ -1,0 +1,22 @@
+- name: Import certificate
+  paloaltonetworks.panos.panos_import:
+    provider: '{{ device }}'
+    category: keypair
+    certificate_name: '{{ certificate_name }}'
+    format: 'pem'
+    filename: '{{ playbook_dir }}/files/certificates/team_{{ team }}_keypair.crt'
+    passphrase: "{{ device.password }}"
+
+- name: Create SSL Service Profile
+  paloaltonetworks.panos.panos_config_element:
+    provider: '{{ device }}'
+    xpath: "/config/shared"
+    element: '{{ config_ssl_profile }}'
+  tags: ssl
+
+- name: Configuire System SSL Settings
+  paloaltonetworks.panos.panos_config_element:
+    provider: '{{ device }}'
+    xpath: "/config/devices/entry[@name='localhost.localdomain']/deviceconfig/system"
+    element: '<ssl-tls-service-profile>{{ certificate_name }}</ssl-tls-service-profile>'
+  tags: ssl

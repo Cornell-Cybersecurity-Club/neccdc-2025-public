@@ -1,0 +1,125 @@
+---
+- name: Create docker network
+  community.docker.docker_network:
+    name: "{{ wg_name }}"
+    ipam_config:
+      - subnet: "192.168.{{ item }}.0/24"
+  when: iptables
+  tags:
+    - wireguard
+    - base
+
+# sudo iptables -I DOCKER-USER 1 -s 192.168.0.0/24 -d 10.0.0.192/27 -j ACCEPT
+- name: Allow egress to teams subnet
+  block:
+    - name: Primary cidr
+      ansible.builtin.iptables:
+        chain: DOCKER-USER
+        source: "192.168.{{ item }}.0/24"
+        destination: "10.0.{{ (item | int) * 4 }}.0/22"
+        jump: ACCEPT
+      when: iptables
+      tags:
+        - iptables
+        - base
+
+    - name: Secondary cidr
+      ansible.builtin.iptables:
+        chain: DOCKER-USER
+        source: "192.168.{{ item }}.0/24"
+        destination: "10.255.{{ item }}.0/24"
+        jump: ACCEPT
+      when: iptables
+      tags:
+        - iptables
+        - base
+
+# https://github.com/wg-easy/wg-easy
+- name: Setup Wireguard
+  community.docker.docker_container:
+    name: "wireguard-{{ wg_name }}"
+    image: ghcr.io/wg-easy/wg-easy:14
+    restart_policy: always
+    networks:
+      - name: "{{ 'bridge' if not iptables else wg_name }}"
+    capabilities:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      "net.ipv4.conf.all.src_valid_mark": 1
+      "net.ipv4.ip_forward": 1
+    volumes:
+      - "/opt/wireguard/wireguard-{{ wg_name }}:/etc/wireguard"
+    ports:
+      - "0.0.0.0:{{ udp_port }}:{{ udp_port }}/udp"
+      - "0.0.0.0:{{ tcp_port }}:{{ tcp_port }}/tcp"
+    env:
+      LANG: "en"
+      WG_HOST: "{{ wireguard_public_host }}"
+      PASSWORD_HASH: "{{ wireguard_password | password_hash('bcrypt') }}"
+      UI_TRAFFIC_STATS: "true"
+      UI_CHART_TYPE: "1"
+      WG_PERSISTENT_KEEPALIVE: "1800"
+      # 30 minutes, also set on custom blue team certs
+      WG_DEFAULT_ADDRESS: "{{ wireguard_client_subnet }}"
+      WG_DEFAULT_DNS: "1.1.1.1"
+      WG_ALLOWED_IPS: "240.240.240.240/32,{{ wireguard_allowed_ips }}"
+      # 240.240.240.240/32 will be replaced later with EIP of the Palo Alto instance
+      PORT: "{{ tcp_port | int }}"
+      WG_PORT: "{{ udp_port | int }}"
+      WG_ENABLE_ONE_TIME_LINKS: "true"
+      UI_ENABLE_SORT_CLIENTS: "true"
+  tags:
+    - wireguard
+    - base
+
+- name: Create wireguard client directory
+  ansible.builtin.file:
+    path: "/opt/wireguard/wireguard-{{ wg_name }}/clients/"
+    state: directory
+    mode: '0755'
+  tags:
+    - client
+
+- name: Create wireguard client
+  ansible.builtin.uri:
+    url: "http://{{ wireguard_public_host }}:{{ tcp_port }}/api/wireguard/client"
+    method: POST
+    headers:
+      Authorization: "{{ wireguard_password }}"
+    body_format: json
+    body:
+      name: "{{ item }}-{{ client_item }}"
+    status_code: 200
+  loop: "{{ clients }}"
+  loop_control:
+    loop_var: client_item
+  tags:
+    - client
+
+- name: Create wireguard client
+  ansible.builtin.uri:
+    url: "http://{{ wireguard_public_host }}:{{ tcp_port }}/api/wireguard/client"
+    method: GET
+    headers:
+      Authorization: "{{ wireguard_password }}"
+    status_code: 200
+  register: wg_clients
+  tags:
+    - client
+
+- name: Create wireguard configuration files
+  ansible.builtin.uri:
+    url: "http://{{ wireguard_public_host }}:{{ tcp_port }}/api/wireguard/client/{{ wg_client_item.id }}/configuration"
+    method: GET
+    headers:
+      Authorization: "{{ wireguard_password }}"
+    dest: "/opt/wireguard/wireguard-{{ wg_name }}/clients/{{ wg_client_item.name }}.conf"
+    return_content: true
+    status_code: 200
+  loop: "{{ wg_clients.json }}"
+  loop_control:
+    loop_var: wg_client_item
+  when: wg_clients.json is defined
+  tags:
+    - client

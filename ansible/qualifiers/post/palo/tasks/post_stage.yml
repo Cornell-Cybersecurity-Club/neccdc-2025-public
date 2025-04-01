@@ -1,0 +1,53 @@
+---
+- name: Configure interfaces
+  paloaltonetworks.panos.panos_interface:
+    provider: '{{ device }}'
+    if_name: '{{ item.if_name }}'
+    mode: '{{ item.mode }}'
+    ip: '{{ item.ip | default(omit) }}'
+    enable_dhcp: '{{ item.enable_dhcp | default(False) }}'
+    create_default_route: '{{ item.create_default_route | default(omit) }}'
+    management_profile: '{{ item.management_profile | default(omit) }}'
+    zone_name: '{{ item.zone_name }}'
+    comment: '{{ item.comment | default(omit) }}'
+    commit: false
+  loop: '{{ interfaces.values() }}'
+  tags: interfaces
+
+- name: Create NAT rules
+  paloaltonetworks.panos.panos_nat_rule2:
+    provider: '{{ device }}'
+    name: '{{ item.name }}'
+    nat_type: '{{ item.nat_type | default("ipv4") }}'
+    from_zones: '{{ item.from_zones }}'
+    to_zones: '{{ item.to_zones }}'
+    to_interface: '{{ item.to_interface | default(omit) }}'
+    service: '{{ item.service | default(omit) }}'
+    source_addresses: '{{ item.source_addresses | default(omit) }}'
+    destination_addresses: '{{ item.destination_addresses | default(omit) }}'
+    source_translation_type: '{{ item.source_translation_type | default(omit) }}'
+    source_translation_address_type: '{{ item.source_translation_address_type | default(omit) }}'
+    source_translation_interface: '{{ item.source_translation_interface | default(omit) }}'
+    source_translation_ip_address: '{{ item.source_translation_ip_address | default(omit) }}'
+    destination_translated_address: '{{ item.destination_translated_address | default(omit) }}'
+    destination_translated_port: '{{ item.destination_translated_port | default(omit) }}'
+    disabled: '{{ item.disabled | default(False) }}'
+    tags: '{{ item.tags | default(omit) }}'
+  loop: '{{ nat_rules }}'
+  tags: nat
+
+- name: Create security rules
+  paloaltonetworks.panos.panos_security_rule:
+    provider: '{{ device }}'
+    rule_name: '{{ item.rule_name }}'
+    source_zone: '{{ item.source_zone }}'
+    source_ip: '{{ item.source_ip }}'
+    destination_zone: '{{ item.destination_zone }}'
+    destination_ip: '{{ item.destination_ip }}'
+    application: '{{ item.application }}'
+    service: '{{ item.service }}'
+    action: '{{ item.action }}'
+    tag_name: '{{ item.tags | default(omit) }}'
+    commit: false
+  with_items: '{{ security_rules }}'
+  tags: security_rules

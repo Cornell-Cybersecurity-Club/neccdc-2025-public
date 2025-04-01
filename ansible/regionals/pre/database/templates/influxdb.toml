@@ -1,0 +1,8 @@
+tls-cert = "/etc/ssl/influxdb-selfsigned.crt"
+tls-key  = "/etc/ssl/influxdb-selfsigned.key"
+
+strong-passwords = "false"
+ui-disabled      = "false"
+
+bolt-path   = "/var/lib/influxdb/influxd.bolt"
+engine-path = "/var/lib/influxdb/engine"

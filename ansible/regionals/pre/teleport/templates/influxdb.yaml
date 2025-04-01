@@ -1,0 +1,12 @@
+kind: role
+version: v7
+metadata:
+  name: influxdb
+  description: Admin access to InfluxDB
+spec:
+  options:
+    max_session_ttl: 6h
+    require_session_mfa: true
+  allow:
+    app_labels:
+      service: influxdb

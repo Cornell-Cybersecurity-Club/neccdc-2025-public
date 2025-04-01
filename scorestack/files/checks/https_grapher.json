@@ -1,0 +1,26 @@
+{
+    "name": "HTTPS_Grapher",
+    "type": "http",
+    "score_weight": 1,
+    "definition": {
+        "requests": [
+            {
+                "host": "{{.Host}}",
+                "path": "/static/image.png",
+                "https": true,
+                "port": 443,
+                "method": "GET",
+                "matchcode": true,
+                "code": 200,
+                "headers": {
+                    "Host": "{{.Host}}"
+                }
+            }
+        ]
+    },
+    "attributes": {
+        "admin": {
+            "Host": "graph.{{.TeamNumber}}.placebo-pharma.com"
+        }
+    }
+}

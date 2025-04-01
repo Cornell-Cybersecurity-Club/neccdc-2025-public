@@ -1,0 +1,22 @@
+version: v2
+kind: user
+metadata:
+  name: {{ username }}
+spec:
+  roles:
+  {% for role in teleport_roles %}
+  - {{ role }}
+  {% endfor %}
+{# Have this indented since its getting tabbed over automatically #}
+traits:
+    aws_role_arns: null
+    db_names: null
+    db_users: null
+    kubernetes_groups:
+      - {{ k8s_group | default('null') }}
+    kubernetes_users:
+      - {{ username | default('null') }}
+    windows_logins:
+      - {{ username | default('null') }}
+    logins:
+      - {{ username }}

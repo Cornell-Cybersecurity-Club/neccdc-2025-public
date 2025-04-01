@@ -1,0 +1,64 @@
+---
+- name: Setup pfSense
+  hosts: firewall
+  become: false
+  gather_facts: true
+  vars:
+    ansible_ssh_args: "-C -o ControlMaster=auto"
+    pub_path: "../../../../documentation/blue_team/regionals/team_{{team}}/certificates/cert.crt"
+    priv_path: "../../../../documentation/blue_team/regionals/team_{{team}}/certificates/private.key"
+  vars_files:
+    - vars/main.yaml
+  tasks:
+    - name: Read version from file
+      ansible.builtin.shell: "cat /etc/version | sed 's/-RELEASE//'"
+      register: pfsense_version_output
+      changed_when: false
+
+    - name: Set version as fact
+      ansible.builtin.set_fact:
+        pfsense_version: "{{ pfsense_version_output.stdout }}"
+
+    - name: Display version
+      ansible.builtin.debug:
+        msg: "pfSense Version: {{ pfsense_version }}"
+
+    - name: Install base packages
+      ansible.builtin.package:
+        name:
+          - "{{ pfsense_sudo_pkg }}"
+          - "{{ pfsense_haproxy_pkg }}"
+        state: present
+
+    - name: Check if RESTAPI is installed
+      ansible.builtin.shell:
+        cmd: "pfSsh.php playback listpkg"
+      register: pkg_output
+
+    - name: Install pfSense RESTAPI using cli
+      ansible.builtin.command:
+        cmd: "pkg-static -C /dev/null add {{ pfsense_api_pkg }}"
+      register: _api_install
+      changed_when: '"Initiating webConfigurator" in _api_install.stdout'
+      when: "'RESTAPI' not in pkg_output.stdout"
+
+    - name: Render Jinja2 template
+      ansible.builtin.template:
+        src: templates/pfsense.xml.j2
+        dest: "/conf/config.xml"
+      vars:
+        hostname: firewall
+        public_key: "{{ lookup('ansible.builtin.file', pub_path) }}"
+        private_key: "{{ lookup('ansible.builtin.file', priv_path) }}"
+
+    - name: Reload pfSense
+      ansible.builtin.command:
+        cmd: /etc/rc.reload_all
+
+    - name: Restart Unbound
+      ansible.builtin.command:
+        cmd: /usr/local/sbin/pfSsh.php playback svc restart unbound
+
+    - name: Restart HAProxy
+      ansible.builtin.command:
+        cmd: /usr/local/sbin/pfSsh.php playback svc restart haproxy

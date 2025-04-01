@@ -1,0 +1,100 @@
+# Its easier to do it this way ;)
+---
+# https://www.redhat.com/en/blog/dns-configuration-ansible
+- name: Configure database DNS
+  hosts: database
+  become: true
+  vars:
+    team_number: "{{ hostvars[inventory_hostname]['team'] }}"
+  tasks:
+    - name: Make sure line 'dns=none' is set in NetworkManager
+      community.general.ini_file:
+        path: /etc/NetworkManager/NetworkManager.conf
+        state: present
+        no_extra_spaces: true
+        section: main
+        option: dns
+        value: none
+        owner: root
+        group: root
+        mode: '0644'
+        backup: true
+      notify:
+        - Reload NetworkManager
+
+    - name: Deploy resolv.conf template
+      ansible.builtin.template:
+        src: templates/resolv.conf.j2
+        dest: /etc/resolv.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: true
+      vars:
+        dns_server: "10.0.{{ team_number }}.254"
+      notify:
+        - Reload NetworkManager
+
+  handlers:
+    - name: Reload NetworkManager
+      ansible.builtin.service:
+        name: NetworkManager
+        state: restarted
+        enabled: true
+
+
+# https://opensource.com/article/21/4/systemd-resolved
+- name: Configure Graylog DNS
+  hosts: graylog
+  become: true
+  vars:
+    team_number: "{{ hostvars[inventory_hostname]['team'] }}"
+  tasks:
+    - name: Copy the updated resolv.conf
+      ansible.builtin.template:
+        src: templates/resolv.conf.j2
+        dest: /opt/resolv.conf
+        mode: '0644'
+        owner: root
+        group: root
+      vars:
+        dns_server: "10.0.{{ team_number }}.190"
+
+    - name: Delete existing /etc/resolv.conf linked file
+      ansible.builtin.file:
+        path: /etc/resolv.conf
+        state: absent
+
+    - name: Create link to the new resolver file
+      ansible.builtin.file:
+        src: /opt/resolv.conf
+        dest: /etc/resolv.conf
+        state: link
+
+
+- name: Configure Kubernetes DNS
+  hosts: cluster
+  become: true
+  vars:
+    team_number: "{{ hostvars[inventory_hostname]['team'] }}"
+  tasks:
+    - name: Copy the updated resolv.conf
+      ansible.builtin.template:
+        src: templates/resolv.conf.j2
+        dest: /opt/resolv.conf
+        mode: '0644'
+        owner: root
+        group: root
+      vars:
+        dns_server: "10.0.{{ team_number }}.254"
+
+    - name: Delete existing /etc/resolv.conf linked file
+      ansible.builtin.file:
+        path: /etc/resolv.conf
+        state: absent
+
+    - name: Create link to the new resolver file
+      ansible.builtin.file:
+        src: /opt/resolv.conf
+        dest: /etc/resolv.conf
+        state: link

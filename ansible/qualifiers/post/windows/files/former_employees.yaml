@@ -1,0 +1,22 @@
+former_employees:
+  - username: josefina.renaud
+    first_name: Josefina
+    last_name: Renaud
+    email: josefina.renaud@placebo-pharma.com
+    password: riffraff
+    department: IT
+    position: System Administrator
+  - username: evie.li
+    first_name: Evie
+    last_name: Li
+    email: evie.li@placebo-pharma.com
+    password: piKQei3h
+    department: IT
+    position: Network Administrator
+  - username: nanna.andersen
+    first_name: Nanna
+    last_name: Andersen
+    email: nanna.andersen@placebo-pharma.com
+    password: lkjhgfds
+    department: IT
+    position: Support

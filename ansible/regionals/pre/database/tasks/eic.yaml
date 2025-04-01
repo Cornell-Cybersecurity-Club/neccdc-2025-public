@@ -1,0 +1,29 @@
+---
+# Setup EC2 Instance Connect
+# https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-set-up.html
+- name: Create directory for EC2 Instance Connect RPMs
+  ansible.builtin.file:
+    path: /tmp/ec2-instance-connect
+    state: directory
+    mode: '0644'
+
+- name: Download EC2 Instance Connect RPM (Linux AMD64)
+  ansible.builtin.get_url:
+    url: "https://amazon-ec2-instance-connect-us-west-2.s3.us-west-2.amazonaws.com/latest/linux_amd64/ec2-instance-connect.rpm"
+    dest: /tmp/ec2-instance-connect/ec2-instance-connect.rpm
+    mode: '0644'
+
+- name: Download EC2 Instance Connect SELinux RPM (Linux AMD64)
+  ansible.builtin.get_url:
+    url: "https://amazon-ec2-instance-connect-us-west-2.s3.us-west-2.amazonaws.com/latest/linux_amd64/ec2-instance-connect-selinux.noarch.rpm"
+    dest: /tmp/ec2-instance-connect/ec2-instance-connect-selinux.rpm
+    mode: '0644'
+
+- name: Install EC2 Instance Connect RPMs
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    disable_gpg_check: true
+  with_items:
+    - /tmp/ec2-instance-connect/ec2-instance-connect.rpm
+    - /tmp/ec2-instance-connect/ec2-instance-connect-selinux.rpm

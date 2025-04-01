@@ -1,0 +1,44 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for bginfo
+- name: Copy CA Certificate to Windows CA
+  win_copy:
+    src: "{{ ca_backup_source }}" 
+    dest: "{{ ca_backup_destination }}"
+
+- name: Ensure ADCS-Cert-Authority is installed
+  win_feature:
+    name: ADCS-Cert-Authority
+    state: present
+    include_management_tools: true
+
+- name: Ensure ADCS-Cert-Authority-Web-Enrollment is installed
+  win_feature:
+    name: ADCS-Web-Enrollment
+    state: present
+
+- name: Run the ADCS install script
+  ansible.windows.win_powershell:
+    script: "{{ lookup('file', 'files/install_ca.ps1') }}"
+    error_action: stop
+    parameters:
+      cert_file_password: "{{ ca_backup_password }}"
+      cert_file_path: "{{ ca_backup_destination }}"
+  register: ca_result
+
+- debug: var=ca_result
+  when: debug
+
+- name: Remove CA certificate from the server
+  ansible.windows.win_file:
+    path: "{{ ca_backup_destination }}"
+    state: absent
+
+- name: Enable Web enrollement
+  ansible.windows.win_powershell:
+    script: "{{ lookup('file', 'files/install_web.ps1') }}"
+    error_action: stop
+  register: web_result
+
+- debug: var=web_result
+  when: debug

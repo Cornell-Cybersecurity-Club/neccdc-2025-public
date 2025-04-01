@@ -1,0 +1,13 @@
+{% for service in service_objects.values() %}
+<entry name="{{ service.name }}">
+    <protocol>
+        <{{ service.protocol }}>
+            <port>{{ service.port }}</port>
+            <override>
+                <no/>
+            </override>
+        </{{ service.protocol }}>
+    </protocol>
+    <description>{{ service.description }}</description>
+</entry>
+{% endfor %}

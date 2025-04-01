@@ -1,0 +1,17 @@
+{
+    "name": "DNS_DC2",
+    "type": "dns",
+    "score_weight": 2,
+    "definition": {
+        "Server": "{{.Server}}",
+        "Port": "53",
+        "Fqdn": "dc-02.placebo-pharma.local",
+        "ExpectedIP": "{{.Result}}"
+    },
+    "attributes": {
+        "admin": {
+            "Server": "10.0.{{.TeamNumber}}.120",
+            "Result": "10.0.{{.TeamNumber}}.120"
+        }
+    }
+}

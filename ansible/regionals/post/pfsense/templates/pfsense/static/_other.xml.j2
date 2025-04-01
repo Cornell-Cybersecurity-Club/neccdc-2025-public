@@ -1,0 +1,34 @@
+<nat>
+    <outbound>
+        <mode>automatic</mode>
+    </outbound>
+</nat>
+<widgets>
+    <sequence>system_information:col1:open:0,disks:col1:open:0,gateways:col2:open:0,interfaces:col2:open:0,services_status:col2:open:0,haproxy:col2:open:0</sequence>
+    <period>10</period>
+</widgets>
+<sysctl>
+    <item>
+        <tunable>debug.trace_on_panic</tunable>
+        <value>1</value>
+        <descr><![CDATA[Print stack trace on kernel panic]]></descr>
+    </item>
+    <item>
+        <tunable>debug.debugger_on_panic</tunable>
+        <value>0</value>
+        <descr><![CDATA[Run debugger on kernel panic]]></descr>
+    </item>
+</sysctl>
+<syslog>
+    <filterdescriptions>1</filterdescriptions>
+    <system_settings>
+        <cronorder>reverse</cronorder>
+    </system_settings>
+</syslog>
+<ntpd>
+    <gps></gps>
+</ntpd>
+<rrd>
+    <enable></enable>
+</rrd>
+<dhcpbackend>isc</dhcpbackend>

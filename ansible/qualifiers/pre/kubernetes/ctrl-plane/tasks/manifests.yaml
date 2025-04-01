@@ -1,0 +1,52 @@
+---
+# https://github.com/openemr/openemr-devops/blob/master/kubernetes/README.md
+- name: Create OpenEMR directory
+  ansible.builtin.file:
+    path: "/home/ubuntu/OpenEMR"
+    state: directory
+    mode: '0755'
+    owner: ubuntu
+    group: ubuntu
+  tags:
+    - open-emr
+
+- name: Copy OpenEMR MySQL manifest
+  ansible.builtin.copy:
+    src: templates/mysql.yaml
+    dest: "/home/ubuntu/OpenEMR/mysql.yaml"
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+  tags:
+    - open-emr
+
+- name: Copy OpenEMR manifest
+  ansible.builtin.copy:
+    src: templates/open-emr.yaml
+    dest: "/home/ubuntu/OpenEMR/open-emr.yaml"
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+  tags:
+    - open-emr
+
+- name: Copy pipeline directory
+  ansible.builtin.copy:
+    src: templates/pipeline/
+    dest: "/home/ubuntu/pipeline/"
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+    directory_mode: '0755'
+  tags:
+    - pipeline
+
+- name: Copy Falco rules values
+  ansible.builtin.copy:
+    src: templates/falco-rules.yaml
+    dest: "/home/ubuntu/falco-rules.yaml"
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+  tags:
+    - falco

@@ -1,0 +1,421 @@
+users:
+  - username: philip.thompson
+    first_name: Philip
+    last_name: Thompson
+    email: philip.thompson@placebo-pharma.com
+    password: cobalt
+    department: Executive
+    position: COO
+  - username: evelyn.turner
+    first_name: Evelyn
+    last_name: Turner
+    email: evelyn.turner@placebo-pharma.com
+    password: ipswich
+    department: Executive
+    position: CEO
+  - username: eduard.meunier
+    first_name: Eduard
+    last_name: Meunier
+    email: eduard.meunier@placebo-pharma.com
+    password: eleanor
+    department: Executive
+    position: CFO
+  - username: malou.poulsen
+    first_name: Malou
+    last_name: Poulsen
+    email: malou.poulsen@placebo-pharma.com
+    password: tech@123
+    department: Executive
+    position: CTO
+  - username: kleopatra.dzerovich
+    first_name: Kleopatra
+    last_name: Dzerovich
+    email: kleopatra.dzerovich@placebo-pharma.com
+    password: vixen
+    department: Executive
+    position: CCO
+  - username: stephan.mathieu
+    first_name: Stephan
+    last_name: Mathieu
+    email: stephan.mathieu@placebo-pharma.com
+    password: qwerty123
+    department: Executive
+    position: CISO
+  - username: frederick.pena
+    first_name: Frederick
+    last_name: Pena
+    email: frederick.pena@placebo-pharma.com
+    password: tetsuo
+    department: R&D
+    position: Manager
+  - username: aubin.clement
+    first_name: Aubin
+    last_name: Clement
+    email: aubin.clement@placebo-pharma.com
+    password: "1234567"
+    department: R&D
+    position: Data Scientist
+  - username: amanda.dean
+    first_name: Amanda
+    last_name: Dean
+    email: amanda.dean@placebo-pharma.com
+    password: kong
+    department: R&D
+    position: Data Scientist
+  - username: "marie.jorgensen"
+    first_name: Marie
+    last_name: Jorgensen
+    email: marie.jorgensen@placebo-pharma.com
+    password: aside
+    department: R&D
+    position: Data Scientist
+  - username: guadalupe.carrera
+    first_name: Guadalupe
+    last_name: Carrera
+    email: guadalupe.carrera@placebo-pharma.com
+    password: sunday
+    department: R&D
+    position: Data Scientist
+  - username: simona.rolland
+    first_name: Simona
+    last_name: Rolland
+    email: simona.rolland@placebo-pharma.com
+    password: 23skidoo
+    department: R&D
+    position: Project Manager
+  - username: draga.nenezic
+    first_name: Draga
+    last_name: Nenezic
+    email: draga.nenezic@placebo-pharma.com
+    password: "1245"
+    department: R&D
+    position: Biomedical Engineer
+  - username: dona.gugale
+    first_name: Dona
+    last_name: Gugale
+    email: dona.gugale@placebo-pharma.com
+    password: password123
+    department: R&D
+    position: Biomedical Engineer
+  - username: carter.singh
+    first_name: Carter
+    last_name: Singh
+    email: carter.singh@placebo-pharma.com
+    password: skyline
+    department: R&D
+    position: Laboratory Technician
+  - username: nicklas.jorgensen
+    first_name: Nicklas
+    last_name: Jorgensen
+    email: nicklas.jorgensen@placebo-pharma.com
+    password: uuuuu
+    department: R&D
+    position: Laboratory Technician
+  - username: theo.taylor
+    first_name: Theo
+    last_name: Taylor
+    email: theo.taylor@placebo-pharma.com
+    password: connie
+    department: R&D
+    position: Biostatistician
+  - username: byron.alexander
+    first_name: Byron
+    last_name: Alexander
+    email: byron.alexander@placebo-pharma.com
+    password: zidane
+    department: R&D
+    position: Project Manager
+  - username: burim.garnier
+    first_name: Burim
+    last_name: Garnier
+    email: burim.garnier@placebo-pharma.com
+    password: coolness
+    department: R&D
+    position: Research Scientist
+  - username: vildan.sandalci
+    first_name: Vildan
+    last_name: Sandalci
+    email: vildan.sandalci@placebo-pharma.com
+    password: hopeless
+    department: R&D
+    position: Research Scientist
+  - username: rose.harris
+    first_name: Rose
+    last_name: Harris
+    email: rose.harris@placebo-pharma.com
+    password: maximus
+    department: R&D
+    position: Research Scientist
+  - username: "kerim.ozkara"
+    first_name: Kerim
+    last_name: Ozkara
+    email: kerim.ozkara@placebo-pharma.com
+    password: yvette
+    department: R&D
+    position: Research Scientist
+  - username: daniel.leroux
+    first_name: Daniel
+    last_name: Leroux
+    email: daniel.leroux@placebo-pharma.com
+    password: ambers
+    department: R&D
+    position: Clinical Research Associate
+  - username: mary.woods
+    first_name: Mary
+    last_name: Woods
+    email: mary.woods@placebo-pharma.com
+    password: mmmmmmmm
+    department: R&D
+    position: Clinical Research Associate
+  - username: "valentin.pascual"
+    first_name: Valentin
+    last_name: Pascual
+    email: valentin.pascual@placebo-pharma.com
+    password: valentin
+    department: R&D
+    position: Clinical Research Associate
+  - username: romain.bourgeois
+    first_name: Romain
+    last_name: Bourgeois
+    email: romain.bourgeois@placebo-pharma.com
+    password: zippy
+    department: IT
+    position: IT Manager
+  - username: ariadna.pasko
+    first_name: Ariadna
+    last_name: Pasko
+    email: ariadna.pasko@placebo-pharma.com
+    password: gmoney
+    department: IT
+    position: Database Engineer
+  - username: benjamin.white
+    first_name: Benjamin
+    last_name: White
+    email: benjamin.white@placebo-pharma.com
+    password: ling
+    department: IT
+    position: Network Administrator
+  - username: kubra.yildizoglu
+    first_name: Kubra
+    last_name: Yildizoglu
+    email: kubra.yildizoglu@placebo-pharma.com
+    password: moonlight
+    department: IT
+    position: Network Administrator
+  - username: marcel.brunet
+    first_name: Marcel
+    last_name: Brunet
+    email: marcel.brunet@placebo-pharma.com
+    password: zhou
+    department: IT
+    position: System Administrator
+  - username: gary.reynolds
+    first_name: Gary
+    last_name: Reynolds
+    email: gary.reynolds@placebo-pharma.com
+    password: colombia
+    department: IT
+    position: System Administrator
+  - username: georgina.gonzales
+    first_name: Georgina
+    last_name: Gonzales
+    email: georgina.gonzales@placebo-pharma.com
+    password: hopper
+    department: IT
+    position: System Administrator
+  - username: lilly.weerheim
+    first_name: Lilly
+    last_name: Weerheim
+    email: lilly.weerheim@placebo-pharma.com
+    password: shogun
+    department: IT
+    position: Technical Support Manager
+  - username: lakshmi.suvarna
+    first_name: Lakshmi
+    last_name: Suvarna
+    email: lakshmi.suvarna@placebo-pharma.com
+    password: temptress
+    department: IT
+    position: Support
+  - username: patrik.henkel
+    first_name: Patrik
+    last_name: Henkel
+    email: patrik.henkel@placebo-pharma.com
+    password: woods
+    department: IT
+    position: Support
+  - username: matthew.carr
+    first_name: Matthew
+    last_name: Carr
+    email: matthew.carr@placebo-pharma.com
+    password: myspace1
+    department: IT
+    position: Security Engineer
+  - username: duilio.da.mota
+    first_name: Duilio
+    last_name: da Mota
+    email: duilio.damota@placebo-pharma.com
+    password: dnsadm
+    department: IT
+    position: SOC Analyst
+  - username: bianca.armas
+    first_name: Bianca
+    last_name: Armas
+    email: bianca.armas@placebo-pharma.com
+    password: clint
+    department: IT
+    position: Operations Security
+  - username: lance.wuite
+    first_name: Lance
+    last_name: Wuite
+    email: lance.wuite@placebo-pharma.com
+    password: giggles
+    department: Compliance
+    position: Compliance Manager
+  - username: emina.weberg
+    first_name: Emina
+    last_name: Weberg
+    email: emina.weberg@placebo-pharma.com
+    password: hayley
+    department: Compliance
+    position: Risk Manager
+  - username: paige.cooper
+    first_name: Paige
+    last_name: Cooper
+    email: paige.cooper@placebo-pharma.com
+    password: kenwood
+    department: Compliance
+    position: Auditor
+  - username: andrea.pierre
+    first_name: Andrea
+    last_name: Pierre
+    email: andrea.pierre@placebo-pharma.com
+    password: runaway
+    department: Compliance
+    position: Auditor
+  - username: yuliy.sirotyuk
+    first_name: Yuliy
+    last_name: Sirotyuk
+    email: yuliy.sirotyuk@placebo-pharma.com
+    password: lemonade
+    department: Compliance
+    position: Auditor
+  - username: abhimanyu.taj
+    first_name: Abhimanyu
+    last_name: Taj
+    email: abhimanyu.taj@placebo-pharma.com
+    password: "777777"
+    department: Finance
+    position: Accounting
+  - username: eleni.galle
+    first_name: Eleni
+    last_name: Galle
+    email: eleni.galle@placebo-pharma.com
+    password: sevens
+    department: Finance
+    position: Accounting
+  - username: gorun.petrishin
+    first_name: Gorun
+    last_name: Petrishin
+    email: gorun.petrishin@placebo-pharma.com
+    password: heka6w2
+    department: Finance
+    position: Operations Management
+  - username: alexis.gauthier
+    first_name: Alexis
+    last_name: Gauthier
+    email: alexis.gauthier@placebo-pharma.com
+    password: forgot
+    department: Marketing
+    position: Director of Marketing
+  - username: chad.fisher
+    first_name: Chad
+    last_name: Fisher
+    email: chad.fisher@placebo-pharma.com
+    password: zach
+    department: Marketing
+    position: Marketing
+  - username: jeanne.cruz
+    first_name: Jeanne
+    last_name: Cruz
+    email: jeanne.cruz@placebo-pharma.com
+    password: answer
+    department: Marketing
+    position: Marketing
+  - username: moustafa.janmaat
+    first_name: Moustafa
+    last_name: Janmaat
+    email: moustafa.janmaat@placebo-pharma.com
+    password: albatros
+    department: HR
+    position: Human Resources
+  - username: surma.marusik
+    first_name: Surma
+    last_name: Marusik
+    email: surma.marusik@placebo-pharma.com
+    password: valentin
+    department: HR
+    position: Human Resources
+  - username: claro.ramos
+    first_name: Claro
+    last_name: Ramos
+    email: claro.ramos@placebo-pharma.com
+    password: stardust
+    department: Sales
+    position: Sales Manager
+  - username: marcus.jimenez
+    first_name: Marcus
+    last_name: Jimenez
+    email: marcus.jimenez@placebo-pharma.com
+    password: jonjon
+    department: Sales
+    position: Sales Representative
+  - username: otto.grytten
+    first_name: Otto
+    last_name: Grytten
+    email: otto.grytten@placebo-pharma.com
+    password: bills
+    department: Sales
+    position: Sales Representative
+  - username: june.pena
+    first_name: June
+    last_name: Pena
+    email: june.pena@placebo-pharma.com
+    password: goliath
+    department: Sales
+    position: Sales Representative
+  - username: claudete.farias
+    first_name: Claudete
+    last_name: Farias
+    email: claudete.farias@placebo-pharma.com
+    password: excite
+    department: Sales
+    position: Sales Representative
+  - username: kassandra.kistner
+    first_name: Kassandra
+    last_name: Kistner
+    email: kassandra.kistner@placebo-pharma.com
+    password: yyyyyy1
+    department: Facilities
+    position: Director
+  - username: aapo.kemppainen
+    first_name: Aapo
+    last_name: Kemppainen
+    email: aapo.kemppainen@placebo-pharma.com
+    password: lizzie
+    department: Facilities
+    position: Repair Technician
+  - username: sophia.dixon
+    first_name: Sophia
+    last_name: Dixon
+    email: sophia.dixon@placebo-pharma.com
+    password: "20012001"
+    department: Facilities
+    position: Repair Technician
+  - username: kirk.johnson
+    first_name: Kirk
+    last_name: Johnson
+    email: kirk.johnson@placebo-pharma.com
+    password: english
+    department: Facilities
+    position: Cheif Cleanliness Officer

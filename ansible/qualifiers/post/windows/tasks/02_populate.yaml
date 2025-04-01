@@ -1,0 +1,43 @@
+#TODO: #31 Cleanup copied files on DC & Clear logs of powershell and ansible
+---
+- name: Automated Setup of Active Directory Users and Groups
+  hosts: windows_dc
+  gather_facts: false
+  vars:
+    ansible_user: "administrator@{{ adserver_domain }}"
+  vars_files:
+    - "../../team_common.yaml"
+
+  tasks:
+    - name: Include bginfo role
+      ansible.builtin.include_role:
+        name: bginfo
+
+    - name: Include populate.users role
+      ansible.builtin.include_role:
+        name: populate.users
+      vars:
+        users_source_csv: "../files/populate/users/users.csv"
+
+    - name: Include populate.users role for former employees
+      ansible.builtin.include_role:
+        name: populate.users
+      vars:
+        users_source_csv: "../files/populate/users/former_employees.csv"
+
+    - name: Include populate.gpo role
+      ansible.builtin.include_role:
+        name: populate.gpo
+      vars:
+        gpo_source: "../files/populate/gpo/"
+        gpo_definitions: "../files/populate/gpo/definitions.yaml"
+        gpo_fake_names: true
+
+    - name: Create DNS records
+      community.windows.win_dns_record:
+        name: "{{ item.key | replace('_','-') }}"
+        type: A
+        value: "{{ item.value }}"
+        zone: "{{ adserver_domain }}"
+      loop: "{{ team_address | dict2items }}"
+      when: item.key is not search('firewall') and item.key is not search('windows')

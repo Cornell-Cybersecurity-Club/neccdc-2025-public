@@ -1,0 +1,47 @@
+---
+- name: Configure Teleport
+  hosts: teleport
+  become: true
+  vars:
+    team_number: "{{ hostvars[inventory_hostname]['team'] }}"
+  tasks:
+    - name: Update password
+      ansible.builtin.user:
+        name: rocky
+        password: "{{ 'example-password' | password_hash('sha512') }}"
+
+    - name: Set a hostname
+      ansible.builtin.hostname:
+        name: teleport
+      tags:
+        - hostname
+
+    - name: Copy TLS certificate
+      ansible.builtin.copy:
+        src: "../../../../documentation/blue_team/regionals/team_{{ team_number }}/certificates/fullchain.crt"
+        dest: /var/lib/teleport/fullchain.crt
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Copy TLS key
+      ansible.builtin.copy:
+        src: "../../../../documentation/blue_team/regionals/team_{{ team_number }}/certificates/private.key"
+        dest: /var/lib/teleport/private.key
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Update Teleport public address
+      ansible.builtin.replace:
+        path: /etc/teleport.yaml
+        regexp: 'teleport\.placebo-pharma\.com'
+        replace: 'teleport.{{ team_number }}.placebo-pharma.com'
+      notify: Restart Teleport
+
+
+  handlers:
+    - name: Restart Teleport
+      ansible.builtin.service:
+        name: teleport
+        state: restarted

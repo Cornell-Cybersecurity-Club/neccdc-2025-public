@@ -1,0 +1,26 @@
+{
+    "name": "HTTP_Pipeline",
+    "type": "http",
+    "score_weight": 1,
+    "definition": {
+        "requests": [
+            {
+                "host": "{{.Host}}",
+                "path": "/production",
+                "https": false,
+                "port": 80,
+                "method": "GET",
+                "matchcode": true,
+                "code": 200,
+                "headers": {
+                    "Host": "{{.Host}}"
+                }
+            }
+        ]
+    },
+    "attributes": {
+        "admin": {
+            "Host": "pipeline.{{.TeamNumber}}.placebo-pharma.com"
+        }
+    }
+}

@@ -1,0 +1,41 @@
+#TODO: #31 Cleanup copied files on DC & Clear logs of powershell and ansible
+---
+- name: Automated Setup of Active Directory Users and Groups
+  hosts: "{{ ansible_limit | default('windows') }}"
+  gather_facts: false
+  vars:
+    ansible_user: "administrator@{{ adserver_domain }}"
+  vars_files:
+    - "../../team_common.yaml"
+
+  tasks:
+    - name: Set DNS Forwarders on Domain Controllers
+      ansible.builtin.include_role:
+        name: dns.forwarder
+      vars:
+        dns_forwarders: "{{ public_dns_forwarders }}"
+      when: "'dc-01' in hostname or 'ca-01' in hostname"
+
+    - name: Set DC Client DNS Servers
+      ansible.windows.win_dns_client:
+        adapter_names: "*"
+        dns_servers:
+          - "{{ team_address.windows_dc }}"
+          - "{{ team_address.windows_ca }}"
+      when: "'dc-01' in hostname"
+
+    - name: Set CA Client DNS Servers
+      ansible.windows.win_dns_client:
+        adapter_names: "*"
+        dns_servers:
+          - "{{ team_address.windows_ca }}"
+          - "{{ team_address.windows_dc }}"
+      when: "'ca-01' in hostname"
+
+    - name: Set Workstation Client DNS Servers
+      ansible.windows.win_dns_client:
+        adapter_names: "*"
+        dns_servers:
+          - "{{ team_address.windows_dc }}"
+          - "{{ team_address.windows_ca }}"
+      when: "'win-01' in hostname"

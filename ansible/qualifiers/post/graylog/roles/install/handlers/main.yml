@@ -1,0 +1,10 @@
+---
+- name: Reload sysctl
+  ansible.builtin.command:
+    cmd: /sbin/sysctl -p
+  become: true
+
+- name: Restart Graylog Server
+  ansible.builtin.systemd:
+    name: graylog-server
+    state: restarted

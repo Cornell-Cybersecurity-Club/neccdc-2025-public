@@ -1,0 +1,52 @@
+version: v3
+teleport:
+  nodename: {{ teleport_server_name }}
+  data_dir: /var/lib/teleport
+  diag_addr: 0.0.0.0:3000
+  log:
+    output: stderr
+    severity: INFO
+    format:
+      output: text
+  ca_pin: ""
+auth_service:
+  enabled: yes
+  authentication:
+    connector_name: local
+    type: local
+    second_factor: off
+  listen_addr: 0.0.0.0:3025
+  cluster_name: {{ teleport_server_name }}
+  proxy_listener_mode: multiplex
+  tokens:
+    - "proxy,node:7CP45VG50LBHR508HRNEH648"
+  proxy_checks_host_keys: no
+  client_idle_timeout: 42m
+  client_idle_timeout_message: "You were not doing enough work."
+  web_idle_timeout: never
+  message_of_the_day: "Welcome to the PlaceboPharma Teleport server\nYou are incentivize not to do anything illegal"
+ssh_service:
+  enabled: yes
+  permit_user_env: true
+  pam:
+    enabled: no
+    service_name: "sshd"
+    use_pam_auth: true
+  labels:
+    os: linux
+    service: teleport
+  commands:
+    - name: hostname
+      command: [hostname]
+      period: 1m0s
+proxy_service:
+  enabled: yes
+  web_listen_addr: 0.0.0.0:443
+  public_addr: {{ teleport_server_dns_address }}:443
+  https_keypairs:
+    - key_file: /var/lib/teleport/private.key
+      cert_file: /var/lib/teleport/fullchain.crt
+app_service:
+  enabled: no
+discovery_service:
+  enabled: yes

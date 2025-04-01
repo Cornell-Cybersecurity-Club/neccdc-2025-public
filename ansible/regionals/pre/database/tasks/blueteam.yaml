@@ -1,0 +1,35 @@
+---
+- name: Create blue team user
+  ansible.builtin.user:
+    name: admin
+    password: "{{ 'example-password' | password_hash('sha512') }}"
+    append: true
+    groups: adm,systemd-journal
+  tags:
+    - blue
+
+- name: Allow admin sudoers
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^admin"
+    line: "admin ALL=(ALL:ALL) NOPASSWD:ALL"
+    validate: "visudo -cf %s"
+  tags:
+    - blue
+
+- name: Add InfluxDB auto-complete script to bash profile
+  ansible.builtin.lineinfile:
+    dest: /home/admin/.bashrc
+    state: present
+    line: "source <(influx completion bash)"
+  tags:
+    - blue
+
+- name: Add InfluxDB ignore self signed certificate
+  ansible.builtin.lineinfile:
+    dest: /home/admin/.bashrc
+    state: present
+    line: "export INFLUX_SKIP_VERIFY=true"
+  tags:
+    - blue

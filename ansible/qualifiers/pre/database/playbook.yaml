@@ -1,0 +1,287 @@
+---
+- name: Setup Database
+  hosts: all
+  become: true
+  vars:
+    former_employees_data: "{{ lookup('file', '../../../../documentation/employee_data/former_employees.yaml') | from_yaml }}"
+    users_data: "{{ lookup('file', '../../../../documentation/employee_data/employees.yaml') | from_yaml }}"
+  tasks:
+    - name: Set a hostname
+      ansible.builtin.hostname:
+        name: "database"
+      tags:
+        - hostname
+
+    # https://docs.influxdata.com/influxdb/v2/install/?t=Linux
+    - name: Add influxDB v2 repository
+      ansible.builtin.yum_repository:
+        name: influxdata
+        description: "InfluxData Repository - Stable"
+        baseurl: "https://repos.influxdata.com/stable/$basearch/main"
+        enabled: true
+        gpgcheck: true
+        gpgkey: https://repos.influxdata.com/influxdata-archive_compat.key
+
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+    - name: Install packages
+      ansible.builtin.dnf:
+        name:
+          - vim
+          - wget
+          - influxdb2
+          - influxdb2-cli
+          - python3
+          - python3-cryptography
+          - python3-pip
+          - bind-utils
+        state: present
+      tags:
+        - install
+
+    - name: Install influxdb python package
+      ansible.builtin.pip:
+        name: influxdb
+      tags:
+        - install
+
+    - name: Ensure database.placebo-pharma.com points to localhost
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        state: present
+        regexp: '^127\.0\.0\.1\s+database\.placebo-pharma\.com$'
+        line: '127.0.0.1 database.placebo-pharma.com'
+      tags:
+        - dns
+
+    - name: Make sure ssl directory exists
+      ansible.builtin.file:
+        path: /etc/ssl
+        state: directory
+        mode: '0755'
+      tags:
+        - ssl
+
+    - name: Generate RSA private key
+      community.crypto.openssl_privatekey:
+        path: /etc/ssl/influxdb-selfsigned.key
+        size: 2048
+        owner: influxdb
+        group: influxdb
+        mode: '0644'
+      tags:
+        - ssl
+
+    # https://docs.influxdata.com/influxdb/v2/admin/security/enable-tls/#self-signed-certificates
+    - name: Generate certificate signing request
+      community.crypto.openssl_csr:
+        path: /etc/ssl/influxdb-selfsigned.csr
+        privatekey_path: /etc/ssl/influxdb-selfsigned.key
+        common_name: database.placebo-pharma.com
+        country_name: US
+        state_or_province_name: Rhode Island
+        locality_name: Bristol
+        organization_name: Placebo Pharma
+        organizational_unit_name: Data Platform
+        subject_alt_name:
+          - DNS:database.placebo-pharma.com
+        email_address: admin@placebo-pharma.com
+        owner: influxdb
+        group: influxdb
+        mode: '0644'
+      tags:
+        - ssl
+
+    - name: Generate self-signed certificate
+      community.crypto.x509_certificate:
+        owner: influxdb
+        group: influxdb
+        mode: '0644'
+        path: /etc/ssl/influxdb-selfsigned.crt
+        privatekey_path: /etc/ssl/influxdb-selfsigned.key
+        csr_path: /etc/ssl/influxdb-selfsigned.csr
+        provider: selfsigned
+      tags:
+        - ssl
+
+    - name: Copy influxdb certificate to trust store
+      ansible.builtin.copy:
+        src: /etc/ssl/influxdb-selfsigned.crt
+        dest: /etc/pki/ca-trust/source/anchors/influxdb.crt
+        mode: '0644'
+        remote_src: true
+      tags:
+        - ssl
+
+    - name: Update trusted certificates
+      ansible.builtin.command:
+        cmd: /usr/bin/update-ca-trust
+      tags:
+        - ssl
+
+    - name: Copy updated cert file to cert file that is actually used
+      ansible.builtin.copy:
+        src: /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt
+        dest: /etc/pki/tls/certs/ca-bundle.crt
+        remote_src: true
+      tags:
+        - ssl
+
+    - name: Copy updated influx config
+      ansible.builtin.copy:
+        src: templates/influxdb.toml
+        dest: /etc/influxdb/config.toml
+        owner: root
+        group: root
+        mode: '0644'
+      tags:
+        - config
+
+    - name: Recursively change ownership of influxdb data directory
+      ansible.builtin.file:
+        path: /var/lib/influxdb
+        state: directory
+        recurse: true
+        owner: influxdb
+        group: influxdb
+        mode: '0755'
+      tags:
+        - perms
+
+    - name: Ensure InfluxDB is running and enabled
+      ansible.builtin.systemd_service:
+        name: influxdb
+        state: started
+        enabled: true
+      tags:
+        - service
+
+    - name: Wait until InfluxDB is "ready"
+      ansible.builtin.uri:
+        url: https://localhost:8086/ready
+        method: GET
+        status_code: 200
+        validate_certs: false
+      retries: 5
+      delay: 10
+      tags:
+        - service
+        - wait
+
+    - name: Setup blue team user
+      ansible.builtin.include_tasks:
+        file: "tasks/blueteam.yaml"
+      tags:
+        - blue
+
+    - name: Initialize Database
+      ansible.builtin.include_tasks:
+        file: "tasks/database.yaml"
+      vars:
+        influxdb_admin_password: example-password
+        influxdb_token: example-token
+        influxdb_org: PlaceboPharma
+        influxdb_bucket: PlaceboPharmaData
+      tags:
+        - database
+
+    - name: Setup blackteam task
+      ansible.builtin.include_tasks:
+        file: "../../../shared/black_team/main.yaml"
+      vars:
+        black_team_password: example-password
+        black_team_pub_path: '../../../../documentation/black_team/black-team.pub'
+        root_groups: wheel
+      tags:
+        - black-team
+
+    - name: Loop through users and create groups
+      ansible.builtin.group:
+        name: "{{ item | regex_replace(' ', '-') | lower }}"
+        state: present
+      with_items:
+        - 'IT'
+        - 'resource-n-development'
+      tags:
+        - users
+
+    - name: Create resource and development data scientist users
+      ansible.builtin.user:
+        name: "{{ item.username | regex_replace(' ', '.') | lower }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        append: true
+        groups: users,resource-n-development
+        shell: '/bin/bash'
+        state: present
+      when: item.position == "Data Scientist"
+      with_items: "{{ users_data.users }}"
+      tags:
+        - users
+
+    - name: Create resource and development research scientist users
+      ansible.builtin.user:
+        name: "{{ item.username | regex_replace(' ', '.') | lower }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        append: true
+        groups: users,resource-n-development
+        shell: '/bin/sh'
+        state: present
+      when: item.position == "Research Scientist"
+      with_items: "{{ users_data.users }}"
+      tags:
+        - users
+
+    - name: Create IT system admins
+      ansible.builtin.user:
+        name: "{{ item.username | regex_replace(' ', '.') | lower }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        append: true
+        groups: "users,it"
+        shell: '/bin/bash'
+        state: present
+      when: item.position == "System Administrator"
+      with_items: "{{ users_data.users }}"
+      tags:
+        - users
+
+    - name: Create IT DBA users
+      ansible.builtin.user:
+        name: "{{ item.username | regex_replace(' ', '.') | lower }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        append: true
+        groups: "users,it,wheel"
+        shell: '/bin/bash'
+        state: present
+      when: item.position == "Database Engineer"
+      with_items: "{{ users_data.users }}"
+      tags:
+        - users
+
+    - name: Create compliance auditors users
+      ansible.builtin.user:
+        name: "{{ item.username | regex_replace(' ', '.') | lower }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        append: true
+        groups: "users,it,wheel"
+        shell: '/bin/bash'
+        state: present
+      when: item.position == "Auditor"
+      with_items: "{{ users_data.users }}"
+      tags:
+        - users
+
+    - name: Create former employee IT system admin account
+      ansible.builtin.user:
+        name: "{{ item.username | regex_replace(' ', '.') | lower }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        append: true
+        groups: "users,it,wheel"
+        shell: '/bin/bash'
+        state: present
+      when: item.position == "System Administrator"
+      with_items: "{{ former_employees_data.users }}"
+      tags:
+        - users

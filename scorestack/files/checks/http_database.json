@@ -1,0 +1,23 @@
+{
+    "name": "HTTPS_database",
+    "type": "http",
+    "score_weight": 2,
+    "definition": {
+        "requests": [
+            {
+                "host": "{{.Host}}",
+                "path": "/ready",
+                "https": true,
+                "port": 8086,
+                "method": "GET",
+                "matchcode": true,
+                "code": 200
+            }
+        ]
+    },
+    "attributes": {
+        "admin": {
+            "Host": "10.0.{{.TeamNumber}}.196"
+        }
+    }
+}

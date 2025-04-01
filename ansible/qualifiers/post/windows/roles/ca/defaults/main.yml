@@ -1,0 +1,5 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for bginfo
+ca_backup_destination: "C:\\backup.p12"
+debug: false

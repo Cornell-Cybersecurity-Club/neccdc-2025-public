@@ -1,0 +1,112 @@
+---
+- name: Setup Nginx Server
+  hosts: all
+  become: true
+  vars:
+    former_employees_data: "{{ lookup('file', '../../../../documentation/employee_data/former_employees.yaml') | from_yaml }}"
+    users_data: "{{ lookup('file', '../../../../documentation/employee_data/employees.yaml') | from_yaml }}"
+  tasks:
+    - name: Set a hostname
+      ansible.builtin.hostname:
+        name: "load-balancer"
+      tags:
+        - hostname
+
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+    - name: Install Nginx
+      ansible.builtin.dnf:
+        name: nginx
+        state: present
+
+    - name: Allow nginx network connect in SELinux
+      ansible.posix.seboolean:
+        name: httpd_can_network_connect
+        state: true
+        persistent: true
+
+    - name: Ensure Nginx is running
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Enable cockpit
+      ansible.builtin.service:
+        name: cockpit.socket
+        state: started
+        enabled: true
+
+    - name: Setup static website
+      block:
+        - name: Delete nginx static html directory
+          ansible.builtin.file:
+            state: absent
+            path: /usr/share/nginx/html/
+
+        - name: Create new nginx static html directory
+          ansible.builtin.file:
+            path: /usr/share/nginx/html/
+            state: directory
+            owner: root
+            group: root
+            mode: '0755'
+
+        - name: Copy static web directory
+          ansible.builtin.copy:
+            src: templates/web/
+            dest: "/usr/share/nginx/html/"
+            owner: root
+            group: root
+            mode: '0644'
+            directory_mode: '0755'
+
+    - name: Setup blackteam task
+      ansible.builtin.include_tasks:
+        file: "../../../shared/black_team/main.yaml"
+      vars:
+        black_team_password: example-password
+        black_team_pub_path: '../../../../documentation/black_team/black-team.pub'
+        root_groups: wheel
+      tags:
+        - black-team
+
+    - name: Loop through users and create groups
+      ansible.builtin.group:
+        name: IT
+        state: present
+      tags:
+        - users
+
+    - name: Create IT users
+      ansible.builtin.user:
+        name: "{{ item.username | regex_replace(' ', '.') | lower }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        append: true
+        groups: "users,it{% if item.position == 'System Administrator' %},wheel{% endif %}"
+        shell: '/bin/bash'
+        state: present
+      when: item.department == "IT"
+      with_items: "{{ users_data.users }}"
+      tags:
+        - users
+
+    - name: Create former network admin employee account
+      ansible.builtin.user:
+        name: "{{ item.username | regex_replace(' ', '.') | lower }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        append: true
+        groups: "users,it,wheel"
+        shell: '/bin/bash'
+        state: present
+      when: item.position == "Network Administrator"
+      with_items: "{{ former_employees_data.users }}"
+      tags:
+        - users
+
+    - name: EC2 instance connect
+      ansible.builtin.include_tasks:
+        file: "tasks/eic.yaml"

@@ -1,0 +1,25 @@
+{
+    "name": "HTTP_graylog",
+    "type": "http",
+    "score_weight": 2,
+    "definition": {
+        "requests": [
+            {
+                "host": "{{.Host}}",
+                "path": "/api/system/lbstatus",
+                "https": false,
+                "port": 9000,
+                "method": "GET",
+                "matchcode": true,
+                "code": 200,
+                "matchcontent": true,
+                "contentregex": "ALIVE"
+            }
+        ]
+    },
+    "attributes": {
+        "admin": {
+            "Host": "10.0.{{.TeamNumber}}.169"
+        }
+    }
+}

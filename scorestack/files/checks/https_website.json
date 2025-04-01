@@ -1,0 +1,26 @@
+{
+    "name": "HTTPS_Website",
+    "type": "http",
+    "score_weight": 3,
+    "definition": {
+        "requests": [
+            {
+                "host": "{{.Host}}",
+                "path": "/employees/",
+                "method": "GET",
+                "https": true,
+                "port": 443,
+                "matchcode": true,
+                "code": 200,
+                "headers": {
+                    "Host": "{{.Host}}"
+                }
+            }
+        ]
+    },
+    "attributes": {
+        "admin": {
+            "Host": "{{.TeamNumber}}.placebo-pharma.com"
+        }
+    }
+}

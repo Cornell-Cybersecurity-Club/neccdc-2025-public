@@ -1,0 +1,20 @@
+---
+- name: Run tasks/01_dc.yaml
+  ansible.builtin.import_playbook: tasks/01_dc.yaml
+  tags: [create]
+
+- name: Run tasks/02_populate.yaml
+  ansible.builtin.import_playbook: tasks/02_populate.yaml
+  tags: [populate]
+
+- name: Run tasks/03_clients.yaml
+  ansible.builtin.import_playbook: tasks/03_clients.yaml
+  tags: [clients]
+
+- name: Run playbooks/04_ca.yaml
+  ansible.builtin.import_playbook: tasks/04_ca.yaml
+  tags: [ca]
+
+- name: Run tasks/05_dns.yaml
+  ansible.builtin.import_playbook: tasks/05_dns.yaml
+  tags: [dns]

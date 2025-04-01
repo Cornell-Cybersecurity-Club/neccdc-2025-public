@@ -1,0 +1,61 @@
+---
+- name: Configure Teleport agent
+  hosts: database
+  become: true
+  vars:
+    team_number: "{{ hostvars[inventory_hostname]['team'] }}"
+    join_token: SK52P7ZMB375R20BQICC4KKW
+    teleport_server_dns_address: teleport.{{ team_number }}.placebo-pharma.com
+  tasks:
+    - name: Update password
+      ansible.builtin.user:
+        name: admin
+        password: "{{ 'example-password' | password_hash('sha512') }}"
+
+    - name: Set a hostname
+      ansible.builtin.hostname:
+        name: database
+      tags:
+        - hostname
+
+    - name: Update certificates
+      ansible.builtin.dnf:
+        name: ca-certificates
+        state: latest
+      notify: Restart and enable Teleport
+      tags:
+        - install
+
+    - name: Copy teleport configuration template
+      ansible.builtin.template:
+        src: templates/teleport.yaml.j2
+        dest: /etc/teleport.yaml
+        mode: '0664'
+        owner: root
+        group: root
+      tags:
+        - teleport
+
+    - name: Copy Teleport system service
+      ansible.builtin.copy:
+        src: templates/teleport.service
+        dest: /usr/lib/systemd/system/teleport.service
+        owner: root
+        group: root
+        mode: '0644'
+      tags:
+        - teleport
+
+    - name: Reload systemd
+      ansible.builtin.systemd:
+        daemon_reload: true
+      tags:
+        - teleport
+
+    - name: Restart and enable Teleport
+      ansible.builtin.service:
+        name: teleport
+        state: restarted
+        enabled: true
+      tags:
+        - teleport

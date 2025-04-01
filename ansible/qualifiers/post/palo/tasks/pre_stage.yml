@@ -1,0 +1,63 @@
+---
+- name: Configuire General Settings
+  paloaltonetworks.panos.panos_config_element:
+    provider: '{{ device }}'
+    xpath: "/config/devices/entry[@name='localhost.localdomain']/deviceconfig/system"
+    element: '{{ config_system }}'
+  tags: config_system
+
+- name: Disable Password-Complexity
+  paloaltonetworks.panos.panos_config_element:
+    provider: '{{ device }}'
+    xpath: "/config/mgt-config/password-complexity"
+    element: '<enabled>no</enabled>'
+  tags: config_password
+
+- name: Configure Management Profiles
+  paloaltonetworks.panos.panos_management_profile:
+    provider: '{{ device }}'
+    name: '{{ item.name }}'
+    ping: '{{ item.ping | default(omit)}}'
+    ssh: '{{ item.ssh | default(omit)}}'
+    http: '{{ item.http | default(omit)}}'
+    https: '{{ item.https | default(omit) }}'
+    telnet: '{{ item.telnet | default(omit) }}'
+    response_pages: true
+    snmp: true
+    userid_service: true
+    userid_syslog_listener_ssl: true
+    userid_syslog_listener_udp: true
+  loop: '{{ management_profiles }}'
+  tags: profiles
+
+- name: Create Address Objects
+  paloaltonetworks.panos.panos_address_object:
+    provider: '{{ device }}'
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    address_type: ip-netmask
+  loop: '{{ address_objects.values() }}'
+  tags: address_objects
+
+- name: Create service objects
+  paloaltonetworks.panos.panos_config_element:
+    provider: '{{ device }}'
+    xpath: "/config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/service"
+    element: '{{ config_services }}'
+  tags: service_objects
+
+- name: Create service groups
+  paloaltonetworks.panos.panos_service_group:
+    provider: '{{ device }}'
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+  loop: '{{ service_groups.values() }}'
+  tags: service_objects
+
+- name: Create tag objects
+  paloaltonetworks.panos.panos_tag_object:
+    provider: '{{ device }}'
+    name: '{{ item.name }}'
+    color: '{{ item.color }}'
+  loop: '{{ tag_objects.values() }}'
+  tags: tag_objects

@@ -1,0 +1,3 @@
+matplotlib
+influxdb-client==1.47.0
+pytz

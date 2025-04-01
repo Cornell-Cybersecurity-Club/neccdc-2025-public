@@ -1,0 +1,51 @@
+---
+- name: Check if MongoDB is installed
+  ansible.builtin.command:
+    cmd systemctl status mongod
+  register: mongodb_service_status
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
+
+- name: Install prerequisites
+  ansible.builtin.apt:
+    name:
+      - gnupg
+      - curl
+    update_cache: true
+    state: present
+  when: "'mongod.service' not in mongodb_service_status.stdout"
+
+- name: Download MongoDB GPG key
+  ansible.builtin.get_url:
+    url: https://www.mongodb.org/static/pgp/server-6.0.asc
+    dest: /tmp/server-6.0.asc
+    mode: '0644'
+  when: "'mongod.service' not in mongodb_service_status.stdout"
+
+- name: Add MongoDB GPG key
+  ansible.builtin.command:
+    cmd: gpg --dearmor -o /usr/share/keyrings/mongodb-server-6.0.gpg /tmp/server-6.0.asc
+  args:
+    creates: /usr/share/keyrings/mongodb-server-6.0.gpg
+  when: "'mongod.service' not in mongodb_service_status.stdout"
+
+- name: Add MongoDB repository
+  ansible.builtin.copy:
+    content: "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] {{ mongodb_repo }}"
+    dest: /etc/apt/sources.list.d/mongodb-org-6.0.list
+  when: "'mongod.service' not in mongodb_service_status.stdout"
+
+- name: Install MongoDB
+  ansible.builtin.apt:
+    update_cache: true
+    name: mongodb-org
+    state: present
+  when: "'mongod.service' not in mongodb_service_status.stdout"
+
+- name: Enable and restart MongoDB service
+  ansible.builtin.systemd:
+    name: mongod
+    enabled: true
+    state: restarted
+  when: "'mongod.service' not in mongodb_service_status.stdout"

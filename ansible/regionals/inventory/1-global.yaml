@@ -1,0 +1,140 @@
+cluster:
+  children:
+    ctrl_plane:
+      vars:
+        teleport_token: 98T63LBZWKNR4K8SV3RYNICE
+        discord_webhook_url:
+          0: 'https://discord.com/api/webhooks/0123456789/abcdefghijklmnopqrstuvwxyz'
+    node_0:
+      vars:
+        teleport_token: E5AI7J4P7VBR2FTIZIU1CECI
+    node_1:
+      vars:
+        teleport_token: K80957CJJFMSYG9A01RDAW6C
+    node_2:
+
+worker_nodes:
+  children:
+    node_0:
+    node_1:
+    node_2:
+
+linux:
+  children:
+    ctrl_plane:
+    database:
+    graylog:
+    node_0:
+    node_1:
+    node_2:
+    teleport:
+  vars:
+    ansible_user: black-team
+    ansible_private_key_file: ../../../../documentation/black_team/black-team
+    ansible_port: 22
+
+ubuntu:
+  children:
+    cluster:
+
+graylog_clients:
+  children:
+    node_0:
+    teleport:
+    windows_dc:
+    windows_workstation:
+
+scorestack:
+  hosts:
+    score.placebo-pharma.com
+  vars:
+    ansible_user: ubuntu
+    ansible_private_key_file: ../documentation/black_team/black-team
+
+wireguard:
+  hosts:
+    vpn.placebo-pharma.com
+  vars:
+    ansible_user: ubuntu
+    ansible_private_key_file: ../../../documentation/black_team/black-team
+
+windows:
+  children:
+    windows_ca:
+    windows_dc:
+    windows_dc_2:
+    windows_workstation:
+    windows_workstation_2:
+  vars:
+    ansible_user: Administrator
+    ansible_password: example-password
+    ansible_connection: winrm
+    ansible_winrm_transport: ntlm
+    ansible_winrm_server_cert_validation: ignore
+    ntp_servers: "0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org"
+    netbios: "PLACEBO-PHARMA"
+    public_dns_forwarders:
+      - "8.8.8.8"
+      - "1.1.1.1"
+
+windows_domain_controllers:
+  children:
+    windows_dc:
+    windows_dc_2:
+
+windows_clients:
+  children:
+    windows_ca:
+    windows_workstation:
+    windows_workstation_2:
+
+windows_domain_join:
+  children:
+    windows_ca:
+    windows_dc_2:
+    windows_workstation:
+    windows_workstation_2:
+
+windows_workstations:
+  children:
+    windows_workstation:
+    windows_workstation_2:
+
+firewall:
+  vars:
+    ansible_user: admin
+    ansible_private_key_file: ../../../../documentation/black_team/black-team
+    ansible_port: 22
+
+all:
+  vars:
+    domain: placebo-pharma.com
+    adserver_domain: placebo-pharma.local
+    adserver_password: example-password
+    blackteam_password: example-password
+
+    ad:
+      domain: placebo-pharma.local
+      netbios: PLACEBO-PHARMA
+
+
+    team_domain: "{{ team }}.placebo-pharma.com"
+
+    team_address:
+      firewall_public: "10.255.{{ team }}.254"
+      firewall_private: "10.0.{{ team }}.254"
+      firewall_corp: "10.0.{{ team }}.126"
+      firewall_dmz: "10.0.{{ team }}.190"
+      firewall_vip: "10.0.{{ team }}.189"
+      database: "10.0.{{ team }}.196"
+      graylog: "10.0.{{ team }}.169"
+      ctrl_plane: "10.0.{{ team }}.250"
+      node_0: "10.0.{{ team }}.200"
+      node_1: "10.0.{{ team }}.211"
+      node_2: "10.0.{{ team }}.222"
+      teleport: "10.0.{{ team }}.180"
+      windows_ca: "10.0.{{ team }}.32"
+      windows_dc: "10.0.{{ team }}.4"
+      windows_dc_2: "10.0.{{ team }}.120"
+      windows_workstation: "10.0.{{ team }}.67"
+      windows_workstation_2: "10.0.{{ team }}.76"
