@@ -1,0 +1,85 @@
+---
+- name: Configure Wireguard Node
+  become: true
+  hosts: wireguard
+  vars:
+    wireguard_public_host: "{{ lookup('env', 'WIREGUARD_PUBLIC_IP') }}"
+    wireguard_subnet_black_team: "172.16.99.x"
+    wireguard_subnet_red_team: "172.16.98.x"
+    wireguard_subnet_blue_team: "172.16"
+    blue_team_subnet: "10"
+    blue_team_block: "24"
+    wireguard_client_dns: "1.1.1.1"
+    wireguard_web_password: "{{ lookup('env', 'WIREGUARD_PASSWORD') }}"
+    number_of_teams: 1  # Just 1 team for testing
+    black_team_clients:
+      - laptop
+      - desktop
+    red_team_clients:
+      - red0
+    output_dir: 'C:/Users/billn/Downloads/ccdc/wireguard-configs.zip'
+  tasks:
+    - name: Install packages
+      ansible.builtin.dnf:
+        name: "{{ packagesdep }}"
+        state: present
+        update_cache: true
+      vars:
+        packagesdep:
+          - ca-certificates
+          - curl
+          - iptables-services
+      tags:
+        - base
+
+    - name: Add docker repo
+      ansible.builtin.command:
+        cmd: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+        creates: /etc/yum.repos.d/docker-ce.repo
+      tags:
+        - base
+
+    - name: Install docker
+      ansible.builtin.dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+      tags:
+        - base
+
+    - name: Service docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+      tags:
+        - base
+
+    - name: Add ec2-user to the docker group
+      ansible.builtin.user:
+        name: ec2-user
+        groups: docker
+        append: true
+      tags:
+        - base
+
+    - name: Create wireguard config directory
+      ansible.builtin.file:
+        path: /opt/wireguard
+        state: directory
+        mode: '0755'
+      tags:
+        - base
+
+    - name: Setup black team wireguard
+      ansible.builtin.include_tasks:
+        file: "tasks/wireguard_instance.yaml"
+      vars:
+        wg_name: "black-team"
+        wg_port: 51820
+        wg_web_port: 51821
+        wg_subnet: "{{ wireguard_subnet_black_team }}"
+        wg_password: "{{ wireguard_web_password }}"
+        wg_clients: "{{ black_team_clients }}"

@@ -3,14 +3,14 @@
   become: true
   hosts: wireguard
   vars:
-    wireguard_public_host: "vpn.placebo-pharma.com"
+    wireguard_public_host: "{{ lookup('env', 'WIREGUARD_PUBLIC_IP') }}"
     wireguard_subnet_black_team: "172.16.99.x"
     wireguard_subnet_red_team: "172.16.98.x"
     wireguard_subnet_blue_team: "172.16"
     blue_team_subnet: "10"
     blue_team_block: "24"
     wireguard_client_dns: "1.1.1.1"
-    wireguard_web_password: example-password
+    wireguard_web_password: "{{ lookup('env', 'WIREGUARD_PASSWORD') }}"
     number_of_teams: 20
     black_team_clients:
       - one
