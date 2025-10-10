@@ -1,7 +1,4 @@
-data "aws_route53_zone" "public" {
-  name         = "placebo-pharma.com."
-  private_zone = false
-}
+# Route 53 zone is created in vpn.tf, not looked up as data
 
 
 data "aws_ami" "ec2" {

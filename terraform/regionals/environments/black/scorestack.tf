@@ -8,8 +8,8 @@ resource "aws_eip" "scorestack" {
 }
 
 resource "aws_route53_record" "scorestack" {
-  zone_id = data.aws_route53_zone.public.zone_id
-  name    = "score.${data.aws_route53_zone.public.name}"
+  zone_id = aws_route53_zone.private.zone_id
+  name    = "score.${aws_route53_zone.private.name}"
   type    = "A"
   ttl     = "300"
   records = [aws_eip.scorestack.public_ip]

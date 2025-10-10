@@ -9,8 +9,8 @@ resource "aws_eip" "wireguard" {
 
 
 resource "aws_route53_record" "vpn" {
-  zone_id = data.aws_route53_zone.public.zone_id
-  name    = "vpn.${data.aws_route53_zone.public.name}"
+  zone_id = aws_route53_zone.private.zone_id
+  name    = "vpn.${aws_route53_zone.private.name}"
   type    = "A"
   ttl     = "300"
   records = [aws_eip.wireguard.public_ip]

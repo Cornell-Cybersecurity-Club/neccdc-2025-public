@@ -26,5 +26,6 @@ variable "rwu_ipsec_vpn_ip" {
 
 variable "validation" {
   type        = bool
+  default     = true
   description = "Make sure this change does not impact the RWU IPSEC VPN?"
 }

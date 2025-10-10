@@ -31,3 +31,16 @@ resource "aws_vpn_connection_route" "rwu" {
   destination_cidr_block = var.rwu_ipsec_vpn_cidr
   vpn_connection_id      = aws_vpn_connection.main.id
 }
+
+# Create private hosted zone for internal DNS
+resource "aws_route53_zone" "private" {
+  name = "ccdc-test.internal"
+
+  vpc {
+    vpc_id = module.vpc.vpc_id
+  }
+
+  tags = {
+    Name = "ccdc-internal-zone"
+  }
+}
