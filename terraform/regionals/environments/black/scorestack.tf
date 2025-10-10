@@ -18,7 +18,7 @@ resource "aws_route53_record" "scorestack" {
 
 resource "aws_instance" "scorestack" {
   ami           = data.aws_ami.ec2.id
-  instance_type = "t3.medium"  # Changed from t3a.xlarge for compatibility
+  instance_type = "t3.micro"  # Free tier eligible
 
   iam_instance_profile = aws_iam_instance_profile.ssm.id
 
