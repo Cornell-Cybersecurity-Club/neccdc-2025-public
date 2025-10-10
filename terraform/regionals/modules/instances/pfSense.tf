@@ -9,7 +9,7 @@ data "aws_ami" "packer_pfsense" {
 
 
 resource "aws_instance" "pfSense" {
-  instance_type = "c5.xlarge"
+  instance_type = "t3.small"  # Optimized: was c5.xlarge ($124/mo), now t3.small ($15/mo)
   ami           = data.aws_ami.packer_pfsense.id
   key_name      = var.key_pair
 

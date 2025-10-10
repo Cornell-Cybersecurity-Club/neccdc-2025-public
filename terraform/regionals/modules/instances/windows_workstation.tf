@@ -1,6 +1,6 @@
 resource "aws_instance" "win_01" {
   ami           = data.aws_ami.windows_client.image_id
-  instance_type = "t3a.large"
+  instance_type = "t3.small"  # Optimized: was t3a.large ($55/mo), now t3.small ($15/mo)
 
   key_name             = var.key_pair
   iam_instance_profile = data.aws_iam_instance_profile.session_manager.name

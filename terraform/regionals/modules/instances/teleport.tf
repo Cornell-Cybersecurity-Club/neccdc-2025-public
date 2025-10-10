@@ -10,7 +10,7 @@ data "aws_ami" "teleport" {
 
 resource "aws_instance" "teleport" {
   ami           = data.aws_ami.teleport.image_id
-  instance_type = "t4g.medium"
+  instance_type = "t4g.small"  # Optimized: was t4g.medium ($25/mo), now t4g.small ($13/mo)
 
   key_name             = var.key_pair
   iam_instance_profile = data.aws_iam_instance_profile.session_manager.name
