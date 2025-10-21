@@ -34,13 +34,6 @@
   tags:
     - black-team
 
-- name: Restart ssh service
-  ansible.builtin.service:
-    name: "{{ ssh_service_name | default('sshd') }}"
-    state: restarted
-  tags:
-    - black-team
-
 - name: Allow black team passwordless sudo
   ansible.builtin.lineinfile:
     dest: /etc/sudoers

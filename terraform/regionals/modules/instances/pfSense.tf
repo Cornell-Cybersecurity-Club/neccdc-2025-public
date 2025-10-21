@@ -3,8 +3,10 @@ data "aws_ami" "packer_pfsense" {
 
   filter {
     name   = "name"
-    values = ["packer-pfsense-24.11*"]
+    values = ["packer-pfsense-*"]
   }
+
+  owners = ["self"]
 }
 
 

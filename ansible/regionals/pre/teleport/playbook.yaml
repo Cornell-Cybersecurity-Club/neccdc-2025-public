@@ -280,7 +280,7 @@
         username: "{{ item.username | regex_replace(' ', '.') | lower }}"
         # Teleport has a minimum password requirement of 12 characters, so we pad the password with 0s
         password: "{{ item.password }}{{ '0' * (12 - item.password | length) }}"
-        teleport_roles: >
+        teleport_roles: |
           [
             'employee'
             {% if item.position == 'Database Engineer' %}, 'influxdb-admin'{% endif %}
@@ -353,7 +353,7 @@
         username: "{{ item.username | regex_replace(' ', '.') | lower }}"
         # Teleport has a minimum password requirement of 12 characters, so we pad the password with 0s
         password: "{{ item.password }}{{ '0' * (12 - item.password | length) }}"
-        teleport_roles: >
+        teleport_roles: |
           [
             'employee'
             {% if item.position == 'Database Engineer' %}, 'influxdb-admin'{% endif %}

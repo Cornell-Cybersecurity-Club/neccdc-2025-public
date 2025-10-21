@@ -1,5 +1,35 @@
 locals { timestamp = formatdate("YYYY-MM-DD-hh-mm", timestamp()) }
 
+variable "aws_region" {
+  type        = string
+  description = "AWS region"
+  default     = "us-east-2"
+}
+
+variable "aws_profile" {
+  type        = string
+  description = "AWS profile"
+  default     = "neccdc-2025"
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "Subnet ID"
+  default     = "subnet-0c392190026498665"
+}
+
+variable "security_group_id" {
+  type        = string
+  description = "Security Group ID"
+  default     = "sg-003fd7d2e39c5aca8"
+}
+
+variable "associate_public_ip" {
+  type        = bool
+  description = "Associate public IP"
+  default     = true
+}
+
 variable "windows_username" {
   type        = string
   description = "Username when authenticating to Windows, default is Administrator."
@@ -25,13 +55,14 @@ variable "fast_launch" {
 }
 
 source "amazon-ebs" "firstrun-windows" {
-  region        = "us-east-2"
+  region        = var.aws_region
   ami_name      = "packer-windows-server-${local.timestamp}"
-  source_ami    = "ami-0b041308c8b9767f3"
+  source_ami    = "ami-021158f59b67638f2"
   instance_type = "t3a.2xlarge"
-  security_group_id = "sg-027af0024a1813997"
-  subnet_id         = "subnet-04255ba24872d7d79"
-  associate_public_ip_address = true
+  security_group_id = var.security_group_id
+  subnet_id         = var.subnet_id
+  associate_public_ip_address = var.associate_public_ip
+  profile       = var.aws_profile
 
   # EBS Storage Volume
   launch_block_device_mappings {
@@ -53,10 +84,10 @@ source "amazon-ebs" "firstrun-windows" {
   winrm_username        = var.windows_username
   winrm_password        = var.windows_password
   winrm_insecure        = true
-  winrm_timeout         = "15m"
+  winrm_timeout         = "45m"
   winrm_use_ssl         = false
 
-  user_data = templatefile("${path.root}/templates/bootstrap.pkrtpl.hcl", {
+  user_data = templatefile("templates/bootstrap.pkrtpl.hcl", {
     windows_username = var.windows_username,
     windows_password = var.windows_password
   })

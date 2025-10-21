@@ -70,12 +70,13 @@
 
 - name: Wait teleport website is ready
   ansible.builtin.uri:
-    url: 'https://{{ teleport_server_dns_address }}/webapi/ping'
+    url: 'https://localhost:443/webapi/ping'
     return_content: false
     status_code: 200
+    validate_certs: false
   until: uri_output.status == 200
   retries: 24
-  delay: 3
+  delay: 5
   register: uri_output
   tags:
     - teleport

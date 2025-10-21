@@ -48,7 +48,6 @@
     - { key: "http_external_uri", value: "{{ http_external_uri }}" }
     - { key: "message_journal_max_size", value: "{{ message_journal_max_size }}" }
     - { key: "message_journal_max_age", value: "{{ message_journal_max_age }}" }
-  notify: Restart Graylog Server
 
 - name: Ensure Graylog Server is enabled and started
   ansible.builtin.systemd:

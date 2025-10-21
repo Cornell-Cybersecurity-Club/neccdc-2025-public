@@ -5,6 +5,8 @@ data "aws_ami" "database" {
     name   = "name"
     values = ["packer-database-*"]
   }
+
+  owners = ["self"]
 }
 
 

@@ -9,6 +9,8 @@ data "aws_ami" "windows_client" {
     name   = "name"
     values = ["packer-windows-workstation-*"]
   }
+
+  owners = ["self"]
 }
 
 data "aws_ami" "windows_server" {
@@ -18,4 +20,6 @@ data "aws_ami" "windows_server" {
     name   = "name"
     values = ["packer-windows-server-*"]
   }
+
+  owners = ["self"]
 }

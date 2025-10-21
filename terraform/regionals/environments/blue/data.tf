@@ -1,15 +1,9 @@
 data "aws_vpc" "black_team" {
-  filter {
-    name   = "tag:Name"
-    values = ["black-team"]
-  }
+  id = "vpc-06e49e89be601f484"
 }
 
 data "aws_vpc" "blue_team" {
-  filter {
-    name   = "tag:Name"
-    values = ["team-mega-vpc"]
-  }
+  id = "vpc-0da4d03d7b738bbac"
 }
 
 data "aws_vpc_peering_connection" "peer" {
@@ -48,7 +42,7 @@ data "aws_security_group" "team" {
 }
 
 data "aws_ec2_managed_prefix_list" "known_hosts" {
-  name = "known-neccdc-hosts"
+  id = "pl-01259d217c52bcd28"
 }
 
 data "aws_vpn_gateway" "site_to_site" {

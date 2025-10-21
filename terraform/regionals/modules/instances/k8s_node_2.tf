@@ -5,6 +5,8 @@ data "aws_ami" "kubernetes_containerd" {
     name   = "name"
     values = ["packer-kubernetes-containerd-*"]
   }
+
+  owners = ["self"]
 }
 
 

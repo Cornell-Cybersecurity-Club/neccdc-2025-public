@@ -5,6 +5,8 @@ data "aws_ami" "kubernetes_ctrl_plane" {
     name   = "name"
     values = ["packer-kubernetes-ctrl-plane-*"]
   }
+
+  owners = ["self"]
 }
 
 

@@ -1,5 +1,37 @@
 locals { timestamp = formatdate("YYYY-MM-DD-hh-mm", timestamp()) }
 
+# Shared AWS variables
+variable "aws_region" {
+  type        = string
+  description = "AWS region for resources"
+  default     = "us-east-2"
+}
+
+variable "aws_profile" {
+  type        = string
+  description = "AWS profile to use"
+  default     = "neccdc-2025"
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "Subnet ID for instance"
+  default     = "subnet-0c392190026498665"
+}
+
+variable "security_group_id" {
+  type        = string
+  description = "Security group ID for instance"
+  default     = "sg-003fd7d2e39c5aca8"
+}
+
+variable "associate_public_ip" {
+  type        = bool
+  description = "Associate public IP address"
+  default     = true
+}
+
+# Windows-specific variables
 variable "windows_username" {
   type        = string
   description = "Username when authenticating to Windows, default is Administrator."
@@ -25,13 +57,14 @@ variable "fast_launch" {
 }
 
 source "amazon-ebs" "firstrun-windows" {
-  region        = "us-east-2"
-  ami_name      = "packer-windows-workstation-${local.timestamp}"
-  source_ami    = "ami-0b041308c8b9767f3"
-  instance_type = "t3a.2xlarge"
-  security_group_id = "sg-027af0024a1813997"
-  subnet_id         = "subnet-04255ba24872d7d79"
-  associate_public_ip_address = true
+  region                      = var.aws_region
+  profile                     = var.aws_profile
+  ami_name                    = "packer-windows-workstation-${local.timestamp}"
+  source_ami                  = "ami-021158f59b67638f2"
+  instance_type               = "t3a.2xlarge"
+  security_group_id           = var.security_group_id
+  subnet_id                   = var.subnet_id
+  associate_public_ip_address = var.associate_public_ip
 
   # EBS Storage Volume
   launch_block_device_mappings {
@@ -51,12 +84,12 @@ source "amazon-ebs" "firstrun-windows" {
   disable_stop_instance = true
   communicator          = "winrm"
   winrm_username        = var.windows_username
-  winrm_password        = var.windows_password
-  winrm_insecure        = true
-  winrm_timeout         = "15m"
   winrm_use_ssl         = false
+  winrm_insecure        = true
+  winrm_timeout         = "45m"
+  winrm_password        = var.windows_password
 
-  user_data = templatefile("${path.root}/templates/bootstrap.pkrtpl.hcl", {
+  user_data = templatefile("templates/bootstrap.pkrtpl.hcl", {
     windows_username = var.windows_username,
     windows_password = var.windows_password
   })

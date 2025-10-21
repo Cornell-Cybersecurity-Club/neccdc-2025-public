@@ -1,4 +1,7 @@
 <powershell>
+# Allow time for Windows to initialize fully
+Start-Sleep -Seconds 60
+
 # Set administrator password
 net user ${windows_username} ${windows_password}
 wmic useraccount where "name='${windows_username}'" set PasswordExpires=FALSE

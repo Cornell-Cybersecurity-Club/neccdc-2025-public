@@ -2,8 +2,8 @@ terraform {
   required_version = ">= 1.9.0"
 
   backend "s3" {
-    bucket = "neccdc-2025-terraform-cornellcyber"
-    key    = "regionals/black/terraform.tfstate"
+    bucket = "neccdc-2025-terraform-cornellcyber-initial"
+    key    = "regionals/blue/terraform.tfstate"
     region = "us-east-2"
 
     profile = "neccdc-2025"

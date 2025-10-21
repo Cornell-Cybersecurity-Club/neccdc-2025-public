@@ -18,9 +18,9 @@ build {
       "-e",
       "ansible_winrm_server_cert_validation=ignore",
       "-e",
-      "ansible_winrm_read_timeout_sec=150",
+      "ansible_winrm_read_timeout_sec=600",
       "-e",
-      "ansible_winrm_operation_timeout_sec=120"
+      "ansible_winrm_operation_timeout_sec=480"
     ]
   }
 

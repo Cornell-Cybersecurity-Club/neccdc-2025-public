@@ -3,8 +3,10 @@ data "aws_ami" "kubernetes_crio" {
 
   filter {
     name   = "name"
-    values = ["packer-kubernetes-cri-o-*"]
+    values = ["packer-kubernetes-containerd-*"]
   }
+
+  owners = ["self"]
 }
 
 

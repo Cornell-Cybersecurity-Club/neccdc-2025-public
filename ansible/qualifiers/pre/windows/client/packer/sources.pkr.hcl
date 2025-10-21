@@ -53,10 +53,10 @@ source "amazon-ebs" "firstrun-windows" {
   winrm_username        = var.windows_username
   winrm_password        = var.windows_password
   winrm_insecure        = true
-  winrm_timeout         = "15m"
+  winrm_timeout         = "45m"
   winrm_use_ssl         = false
 
-  user_data = templatefile("${path.root}/templates/bootstrap.pkrtpl.hcl", {
+  user_data = templatefile("templates/bootstrap.pkrtpl.hcl", {
     windows_username = var.windows_username,
     windows_password = var.windows_password
   })

@@ -2,6 +2,8 @@
 - name: Install MongoDB, Graylog Data Node, and Graylog Server
   hosts: packer
   become: true
+  vars_files:
+    - ../../../shared/graylog/vars/main.yml
   vars:
     former_employees_data: "{{ lookup('file', '../../../../documentation/employee_data/former_employees.yaml') | from_yaml }}"
     users_data: "{{ lookup('file', '../../../../documentation/employee_data/employees.yaml') | from_yaml }}"
@@ -11,6 +13,10 @@
         - name: AWS SSM Agent | Install
           ansible.builtin.apt:
             deb: https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
+          retries: 3
+          delay: 10
+          register: ssm_install_result
+          until: ssm_install_result is succeeded
           tags:
             - ssm
 
@@ -23,8 +29,8 @@
             - ssm
 
     - name: Include install role if install var is present
-      ansible.builtin.include_role:
-        name: graylog
+      ansible.builtin.include_tasks:
+        file: "../../../shared/graylog/tasks/main.yml"
       vars:
         graylog_install: true
         graylog_configure: false

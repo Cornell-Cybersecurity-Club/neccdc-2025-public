@@ -1,26 +1,33 @@
 ---
-# https://helm.sh/docs/intro/install/#from-apt-debianubuntu
-- name: Helm repository
+# https://helm.sh/docs/intro/install/#from-script
+- name: Install Helm from GitHub script (baltocdn.com is not reachable)
   block:
-    - name: Download Kubernetes key
+    - name: Download Helm installation script
       ansible.builtin.get_url:
-        url: https://baltocdn.com/helm/signing.asc
-        dest: /usr/share/keyrings/helm.asc
-        mode: '0755'
+        url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        dest: /tmp/get_helm.sh
+        mode: '0700'
+        timeout: 30
 
-    - name: Add Kubernetes APT repository
-      ansible.builtin.apt_repository:
-        repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/helm.asc] https://baltocdn.com/helm/stable/debian/ all main"
-        state: present
+    - name: Install Helm using script
+      ansible.builtin.shell: /tmp/get_helm.sh
+      args:
+        creates: /usr/local/bin/helm
+
+    - name: Create symlink for helm in /usr/bin
+      ansible.builtin.file:
+        src: /usr/local/bin/helm
+        dest: /usr/bin/helm
+        state: link
+
+    - name: Clean up installation script
+      ansible.builtin.file:
+        path: /tmp/get_helm.sh
+        state: absent
 
 - name: Update apt packages
   ansible.builtin.apt:
     update_cache: true
-
-- name: Install helm
-  ansible.builtin.apt:
-    name: helm
-    state: present
 
 - name: Install Helm diff plugin
   become: true

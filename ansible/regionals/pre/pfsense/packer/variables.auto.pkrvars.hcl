@@ -1,3 +1,3 @@
-pfsense_version  = "24.11"
+pfsense_version  = "25.07.1"
 pfsense_password = "pfsadmin"
 pfsense_username = "admin"

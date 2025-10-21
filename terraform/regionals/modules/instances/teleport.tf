@@ -5,6 +5,8 @@ data "aws_ami" "teleport" {
     name   = "name"
     values = ["packer-teleport-*"]
   }
+
+  owners = ["self"]
 }
 
 

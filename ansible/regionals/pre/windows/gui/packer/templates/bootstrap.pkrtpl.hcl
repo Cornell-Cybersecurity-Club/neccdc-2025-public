@@ -1,10 +1,10 @@
 <powershell>
+# Allow time for Windows to initialize fully
+Start-Sleep -Seconds 60
+
 # Set administrator password
 net user ${windows_username} ${windows_password}
 wmic useraccount where "name='${windows_username}'" set PasswordExpires=FALSE
-
-# First, make sure WinRM can't be connected to
-netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new enable=yes action=block
 
 # Delete any existing WinRM listeners
 winrm delete winrm/config/listener?Address=*+Transport=HTTP  2>$Null

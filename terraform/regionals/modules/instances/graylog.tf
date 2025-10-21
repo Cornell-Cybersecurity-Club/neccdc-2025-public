@@ -5,6 +5,8 @@ data "aws_ami" "graylog" {
     name   = "name"
     values = ["packer-graylog-*"]
   }
+
+  owners = ["self"]
 }
 
 

@@ -17,6 +17,9 @@ resource "acme_certificate" "scorestack" {
 
   dns_challenge {
     provider = "route53"
+    config = {
+      AWS_REGION = "us-east-2"
+    }
   }
 }
 

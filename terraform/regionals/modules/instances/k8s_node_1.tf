@@ -3,8 +3,10 @@ data "aws_ami" "kubernetes_docker" {
 
   filter {
     name   = "name"
-    values = ["packer-kubernetes-docker-*"]
+    values = ["packer-kubernetes-containerd-*"]
   }
+
+  owners = ["self"]
 }
 
 

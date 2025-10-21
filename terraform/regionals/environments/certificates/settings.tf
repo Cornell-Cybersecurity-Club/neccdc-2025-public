@@ -1,8 +1,8 @@
 terraform {
-  required_version = "~> 1.9.0"
+  required_version = ">= 1.9.0"
 
   backend "s3" {
-    bucket = "neccdc-2025-terraform"
+    bucket = "neccdc-2025-terraform-cornellcyber-initial"
     key    = "regionals/certificates/terraform.tfstate"
     region = "us-east-2"
 
@@ -30,7 +30,7 @@ terraform {
 }
 
 provider "aws" {
-  region = var.region
+  region = "us-east-2"
 
   profile = "neccdc-2025"
 
@@ -44,8 +44,8 @@ provider "aws" {
 
 provider "acme" {
   # Staging endpoint 
-  # server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
+  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
 
   # Production endpoint
-  server_url = "https://acme-v02.api.letsencrypt.org/directory"
+  # server_url = "https://acme-v02.api.letsencrypt.org/directory"
 }
