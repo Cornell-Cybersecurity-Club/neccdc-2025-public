@@ -44,6 +44,11 @@ terraform.tfvars.json
 **/*vault*.yml
 **/*vault*.yaml
 
+# Ansible generated tokens and secrets
+**/output/*token*
+**/output/*.token
+ansible/**/output/
+
 # Ansible retry files
 *.retry
 
